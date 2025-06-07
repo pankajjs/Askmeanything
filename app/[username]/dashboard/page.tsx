@@ -1,5 +1,5 @@
 import { Dashboard } from "@/components/dashboard";
-import { getUser } from "@/lib/api/users";
+import { getAuthUser, getUser } from "@/lib/api/users";
 import { notFound } from "next/navigation";
 
 export default async function Page({params}: {params: {username: string}}) {
@@ -10,6 +10,6 @@ export default async function Page({params}: {params: {username: string}}) {
     notFound();
   }
 
-  return  <Dashboard />
+  return  <Dashboard username={user.username}/>
 }
 
