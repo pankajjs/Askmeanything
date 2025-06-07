@@ -13,7 +13,7 @@ export default async function Page({params}: {params: {username: string}}) {
     return <div className="flex items-center justify-center h-screen">
         <div className="px-10 w-[500px] relative">
             <div className="text-xl py-1 font-bold text-wrap text-[#7F55B1]">Ask something interesting to {username}</div>
-            <AskQuestion />
+            <AskQuestion  username={username}/>
         </div>
     </div>
 }

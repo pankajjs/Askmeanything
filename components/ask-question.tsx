@@ -3,13 +3,24 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-
+import { CreateQuestion } from "@/lib/api/questions";
 
 const MAX_MESSAGE_LENGTH = 200;
 
-export default function AskQuestion() {
+export default function AskQuestion({username}: {username: string}) {
     const [message, setMessage] = useState("");
     const [validMessage, setValidMessage] = useState(false);
+
+    const handleSend = useCallback(async () => {
+        const question = await CreateQuestion({data: message, username});
+        if(question){
+            console.log(question);
+            setMessage("");
+            toast.success("Question sent successfully");
+        }else{
+            toast.error("Failed to send question. Please try again.");
+        }
+    }, [message]);
     
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
         const newMessage = e.currentTarget.innerText ?? "";
@@ -39,7 +50,7 @@ export default function AskQuestion() {
             </div>
             <div className="absolute bottom-6 text-sm text-gray-500">{message.length}/{MAX_MESSAGE_LENGTH}</div>
             <div className="mt-2 flex justify-end">
-                <Button className={`hover:bg-[#9B7EBD] text-white font-bold  ${validMessage ? "bg-[#9B7EBD]" : "bg-[#7F55B1]"}`} disabled={!validMessage}>Send</Button>
+                <Button className={`hover:bg-[#9B7EBD] text-white font-bold  ${validMessage ? "bg-[#9B7EBD]" : "bg-[#7F55B1]"}`} disabled={!validMessage} onClick={handleSend}>Send</Button>
             </div>
         </>
     )
