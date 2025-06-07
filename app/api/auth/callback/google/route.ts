@@ -1,5 +1,5 @@
 import { oauth2Client } from "@/lib/auth-client";
-import { prisma } from "@/lib/prisma";
+import { Prisma, prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { config } from "@/lib/config";
 import { generateToken } from "@/lib/jwt";
@@ -44,6 +44,10 @@ export async function GET(req: NextRequest) {
                 data: {
                     email: tokenInfo.email,
                     username: tokenInfo.email.split("@")[0],
+                    roles: {
+                        "admin": false,
+                        "user": true,
+                    } as Prisma.JsonObject
                 }
             })
         }

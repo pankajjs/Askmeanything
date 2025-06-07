@@ -1,22 +1,10 @@
 import AskQuestion from "@/components/ask-question";
+import { getUser } from "@/lib/api/users";
 import { notFound } from "next/navigation";
-
-
-const fetchUser = async (username: string) => {
-    console.log(username);
-    const res = await fetch(`http://localhost:3000/api/users?username=${username}`, {
-        method: "POST",
-    })
-    if(!res.ok){
-        return;    
-    }
-    return res.json()
-}
 
 export default async function Page({params}: {params: {username: string}}) {
     const {username} = params;
-    console.log(username);
-    const user = await fetchUser(username);
+    const user = await getUser(username);
     
     if(!user){
         notFound();

@@ -4,6 +4,8 @@ import { toast } from "sonner"
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
+import { getAuthUser } from "@/lib/api/users"
+import { Prisma } from "@/lib/prisma"
 
 export default function Navbar() {
     const router = useRouter()
@@ -23,7 +25,7 @@ export default function Navbar() {
             console.error(error)
             toast.error("Failed to logout")
         }
-    }, [router])
+    }, [])
 
     const handleLogin = useCallback(async () => {
         router.push(`/api/auth/login?redirectUrl=${window.location.href}`)
@@ -31,11 +33,8 @@ export default function Navbar() {
 
      const fetchAuthUser = useCallback(async () => {
         try{
-            const res = await fetch("/api/me", {
-                method: "GET",
-                credentials: "include",
-            })
-            if(res.ok){
+            const user = await getAuthUser();
+            if(user){
                 setAuth(true)
             }
         }catch(error){
