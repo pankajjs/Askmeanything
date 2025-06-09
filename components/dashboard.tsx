@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Textarea } from "./ui/textarea";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
+import { createReply } from "@/lib/api/replies";
 
 export function Dashboard() {
 
@@ -49,6 +50,7 @@ const Questions = ({date}: {date: Date}) => {
   const {user} = useContext(AuthContext)
   const [questions, setQuestions] = useState<Questions[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [answer, setAnswer] = useState("")
   
   const fetchQuestions = useCallback(async ()=>{
       const questions = await getQuestionsByUser(user?.id ?? "", 1, 10, date.getTime().toString())
@@ -70,15 +72,14 @@ const Questions = ({date}: {date: Date}) => {
   if(questions.length == 0){
     return <div className="text-center text-sm text-muted-foreground">No questions found</div>
   }
-
+console.log(answer)
   return questions.map((question, index) => (
     <Card key={index} className="w-full gap-0 justify-between my-4 p-0 min-h-30">
       <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
         {question.data}
       </CardDescription>
       <CardFooter className="flex flex-col p-3 gap-2">
-        <Answer />
-        <Button className="w-full">Reply</Button>
+        <Answer qId={question.id}/>
       </CardFooter>
     </Card>
   ))
@@ -103,8 +104,21 @@ const Replies = () => {
 }
 
 
-const Answer = () => {
+const Answer = ({qId}: { qId: string}) => {
+  const [answer, setAnswer] = useState("")
+  const handleReply = useCallback(async () => {
+    const res = await createReply({data: answer, qId: qId})
+    console.log(res)
+    if(res){
+      toast.success("Reply created successfully")
+    }else{
+      toast.error("Failed to send reply")
+    }
+  }, [answer, qId])
   return (
-    <Textarea placeholder="Type your message here." className="w-full text-sm resize-none" />
+    <>
+    <Textarea placeholder="Type your message here." className="w-full text-sm resize-none" value={answer} onChange={(e) => setAnswer(e.target.value)}/>
+    <Button className="w-full" onClick={handleReply}>Reply</Button>
+    </>
   )
 }
