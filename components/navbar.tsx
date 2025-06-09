@@ -6,8 +6,9 @@ import { useCallback, useContext } from "react"
 import { AuthContext } from "@/lib/context"
 import { toast } from "sonner"
 import { ThemeToggle } from "./theme-toggle"
-import { DashboardIcon, ExitIcon } from "@radix-ui/react-icons"
+import { DashboardIcon, ExitIcon} from "@radix-ui/react-icons"
 import Link from "next/link"
+import { User } from "lucide-react"
 
 export default function Navbar() {
     const router = useRouter()
@@ -39,6 +40,7 @@ export default function Navbar() {
                     <ThemeToggle/>
                     { user ? (
                         <div className="flex items-center justify-center gap-4">
+                            <Link href={`/${user.username}`}><User className="w-4 h-4"/></Link>
                             <Link href={`/${user.username}/dashboard`}>
                             <DashboardIcon/>
                             </Link>
