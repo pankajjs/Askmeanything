@@ -2,53 +2,47 @@
 
 import { CardDescription, CardFooter } from "./ui/card";
 
-import {useCallback, useEffect, useState } from "react";
+import {useContext, useState } from "react";
 import { Card } from "./ui/card";
 import { wordGen } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { getAuthUser } from "@/lib/api/users";
-import Forbidden from "./forbidden";
-import Loader from "./loader";
+import { AuthContext } from "@/lib/context";
+import { PopoverCalendar } from "./calendar";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import { toast } from "sonner";
 
-export function Dashboard({username}: {username: string}) {
+export function Dashboard() {
 
-  const [tab, setTab] = useState("questions");
-  const [forbidden, setForbidden] = useState(false);
-  const [auth, setAuth] = useState(false);
+  const [currentTab, setCurrentTab] = useState("questions");
+  const [date, setDate] = useState(new Date());
 
-  const fetchAuthUser = useCallback(async () => {
-    const authUser = await getAuthUser();
 
-    if(!authUser || authUser.username !== username){
-        setForbidden(true);
-        return;
-    }
-
-    setAuth(true);
-  }, [])
-
-  useEffect(()=>{
-    fetchAuthUser();
-  }, [fetchAuthUser])
-
-  if(forbidden){
-    return <Forbidden />
+  if(date > new Date()){
+    setDate(new Date())
+    toast.error("Date cannot be in the future")
   }
-  
-  return auth ? <div className="justify-center items-center flex flex-col">
-    <div className="flex justify-between w-ful px-2"> 
-      <div onClick={() => setTab("questions")} className={`${tab === "questions" ? "bg-gray-200" : "bg-gray-100"} p-2 rounded-md`}>Questions</div>
-      <div onClick={() => setTab("replies")} className={`${tab === "replies" ? "bg-gray-200" : "bg-gray-100"} p-2 rounded-md`}>Replies</div>
-    </div>
-    <div className="">
-      {tab === "questions" ? <Questions /> : <Replies />}
-    </div>
+  return <div className="px-8">
+      <div className="flex justify-between items-center py-4">
+       <div className="flex gap-4 flex-col">
+       <div className="flex items-center gap-1">
+          <Checkbox id="questions" defaultChecked={currentTab === "questions"} onClick={() => setCurrentTab("questions")} checked={currentTab === "questions"}/>
+          <Label htmlFor="questions">Questions</Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox id="replies" checked={currentTab === "replies"} onClick={() => setCurrentTab("replies")}/>
+          <Label htmlFor="replies">Replies</Label>
+        </div>
+       </div>
+        <PopoverCalendar date={date} setDate={setDate}/>
+      </div>
+      {currentTab === "questions" ? <Questions /> : <Replies />}
   </div>
-  : <Loader />
 }
 
 const Questions = () => {
+  const {user} = useContext(AuthContext)
   return Array(10).fill(0).map((_, index) => (
     <Card key={index} className="w-[400px] p-0 gap-0 justify-between m-2 min-h-45">
       <CardDescription className="text-wrap break-words p-3">

@@ -17,8 +17,6 @@ export default function Page() {
     return <div>You are unauthorized to access this page</div>
   }
 
-  return  <div>Dashboard for {username}
-  <Dashboard/>
-  </div>
+  return  <Dashboard/>
 }
 
