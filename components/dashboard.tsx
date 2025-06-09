@@ -12,6 +12,7 @@ import { PopoverCalendar } from "./calendar";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { toast } from "sonner";
+import { Textarea } from "./ui/textarea";
 
 export function Dashboard() {
 
@@ -44,12 +45,12 @@ export function Dashboard() {
 const Questions = () => {
   const {user} = useContext(AuthContext)
   return Array(10).fill(0).map((_, index) => (
-    <Card key={index} className="w-[400px] p-0 gap-0 justify-between m-2 min-h-45">
-      <CardDescription className="text-wrap break-words p-3">
-        {wordGen(5)}
+    <Card key={index} className="w-full gap-0 justify-between my-4 p-0 min-h-30">
+      <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
+        {wordGen(100)}
       </CardDescription>
-      <CardFooter className="flex-col p-3">
-        <Input placeholder="Type your reply..." className="mb-2" />
+      <CardFooter className="flex flex-col p-3 gap-2">
+        <Answer />
         <Button className="w-full">Reply</Button>
       </CardFooter>
     </Card>
@@ -58,7 +59,7 @@ const Questions = () => {
 
 const Replies = () => {
   return Array(10).fill(0).map((_, index) => (
-    <Card key={index} className="w-[400px] p-0">
+    <Card key={index} className="w-full p-0">
       <CardDescription className="text-wrap break-words p-3">
         {wordGen(200)}
       </CardDescription>
@@ -68,4 +69,11 @@ const Replies = () => {
       </CardFooter>
     </Card>
   ))
+}
+
+
+const Answer = () => {
+  return (
+    <Textarea placeholder="Type your message here." className="w-full text-sm resize-none" />
+  )
 }
