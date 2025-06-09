@@ -30,14 +30,16 @@ export default function Navbar() {
     return (
         <div className="px-8 py-4">
             <div className="flex justify-between items-center border-[1px] rounded-full p-4">
-                <div>
-                    <h1>Logo</h1>
+                <div className="">
+                    <Link href="/">
+                        Logo
+                    </Link>
                 </div>
                 <div className="nav-links flex items-center justify-center gap-4">
                     <ThemeToggle/>
                     { user ? (
                         <div className="flex items-center justify-center gap-4">
-                            <Link href={`${user.username}/dashboard`}>
+                            <Link href={`/${user.username}/dashboard`}>
                             <DashboardIcon/>
                             </Link>
                             <ExitIcon onClick={handleLogout}/>
