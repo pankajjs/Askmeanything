@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation"
 import { useCallback, useContext } from "react"
 import { AuthContext } from "@/lib/context"
 import { toast } from "sonner"
+import { ThemeToggle } from "./theme-toggle"
+import { DashboardIcon, ExitIcon } from "@radix-ui/react-icons"
+import Link from "next/link"
 
 export default function Navbar() {
     const router = useRouter()
@@ -25,16 +28,24 @@ export default function Navbar() {
      }, [logout, router])
 
     return (
-        <div className="flex justify-between items-center p-4">
-            <div>
-                <h1>Logo</h1>
-            </div>
-            <div>
-                { user ? (
-                    <Button onClick={handleLogout}>Logout</Button>
-                ) : (
-                    <Button onClick={handleLogin}>Login</Button> 
-                )}
+        <div className="px-8 py-4">
+            <div className="flex justify-between items-center border-[1px] rounded-full p-4">
+                <div>
+                    <h1>Logo</h1>
+                </div>
+                <div className="nav-links flex items-center justify-center gap-4">
+                    <ThemeToggle/>
+                    { user ? (
+                        <div className="flex items-center justify-center gap-4">
+                            <Link href={`${user.username}/dashboard`}>
+                            <DashboardIcon/>
+                            </Link>
+                            <ExitIcon onClick={handleLogout}/>
+                        </div>
+                    ) : (
+                        <Button onClick={handleLogin}>Login</Button> 
+                    )}
+                </div>
             </div>
         </div>
     )
