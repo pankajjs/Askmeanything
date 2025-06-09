@@ -1,15 +1,21 @@
-import { Dashboard } from "@/components/dashboard";
-import { getAuthUser, getUser } from "@/lib/api/users";
-import { notFound } from "next/navigation";
+"use client"
 
-export default async function Page({params}: {params: {username: string}}) {
-  const {username} = params;
-  const user = await getUser(username);
+import { AuthContext } from "@/lib/context";
+import { useParams } from "next/navigation";
+import { useContext } from "react";
 
-  if(!user){
-    notFound();
+export default function Page() {
+  const {username} = useParams()
+  const { user, isLoading } = useContext(AuthContext);
+
+  if(isLoading){
+    return <div>Loading...</div>
   }
 
-  return  <Dashboard username={user.username}/>
+  if(!user || user?.username != username){
+    return <div>You are unauthorized to access this page</div>
+  }
+
+  return  <div>Dashboard for {username}</div>
 }
 
