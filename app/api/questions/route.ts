@@ -24,10 +24,13 @@ export async function POST(req: NextRequest) {
                 data: data.data,
                 user: {
                     connect: {
-                        id: user.id
+                       id: user.id
                     }
                 }
             },
+            omit: {
+                userId: true,
+            }
         })
 
         return NextResponse.json({
