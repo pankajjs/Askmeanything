@@ -18,8 +18,8 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   username  String   @unique
   email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt Int
+  updatedAt Int
   questions Question[]
   roles Json
 }
@@ -27,8 +27,8 @@ model Question {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   data      String
   answered  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt Int
+  updatedAt Int
   reply   Reply?
   userId  String   @db.ObjectId
   user    User     @relation(fields: [userId], references: [id])
@@ -39,6 +39,6 @@ model Reply {
   qId       String   @unique @db.ObjectId
   data      String
   question  Question @relation(fields: [qId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt Int
+  updatedAt Int
 }

@@ -47,7 +47,9 @@ export async function GET(req: NextRequest) {
                     roles: {
                         "admin": false,
                         "user": true,
-                    } as Prisma.JsonObject
+                    } as Prisma.JsonObject,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
                 }
             })
         }

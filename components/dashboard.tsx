@@ -2,7 +2,7 @@
 
 import { CardDescription, CardFooter, CardHeader } from "./ui/card";
 
-import {useContext, useState } from "react";
+import {useCallback, useContext, useEffect, useState } from "react";
 import { Card } from "./ui/card";
 import { wordGen } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -12,6 +12,8 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { toast } from "sonner";
 import { Textarea } from "./ui/textarea";
+import { getQuestionsByUser } from "@/lib/api/users";
+import { Prisma } from "@/lib/prisma";
 
 export function Dashboard() {
 
@@ -37,16 +39,42 @@ export function Dashboard() {
        </div>
         <PopoverCalendar date={date} setDate={setDate}/>
       </div>
-      {currentTab === "questions" ? <Questions /> : <Replies />}
+      {currentTab === "questions" ? <Questions date={date} /> : <Replies />}
   </div>
 }
 
-const Questions = () => {
+type Questions = Prisma.QuestionGetPayload<{}>
+
+const Questions = ({date}: {date: Date}) => {
   const {user} = useContext(AuthContext)
-  return Array(10).fill(0).map((_, index) => (
+  const [questions, setQuestions] = useState<Questions[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  
+  const fetchQuestions = useCallback(async ()=>{
+      const questions = await getQuestionsByUser(user?.id ?? "", 1, 10, date.getTime().toString())
+      if(!questions){
+        return;
+      }
+      setQuestions(questions)
+      setIsLoading(false)
+  }, [user?.id, date])
+
+  useEffect(() => {
+    fetchQuestions()
+  }, [fetchQuestions])
+
+  if(isLoading){
+    return <div className="text-center text-sm text-muted-foreground">Loading...</div>
+  }
+
+  if(questions.length == 0){
+    return <div className="text-center text-sm text-muted-foreground">No questions found</div>
+  }
+
+  return questions.map((question, index) => (
     <Card key={index} className="w-full gap-0 justify-between my-4 p-0 min-h-30">
       <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
-        {wordGen(100)}
+        {question.data}
       </CardDescription>
       <CardFooter className="flex flex-col p-3 gap-2">
         <Answer />

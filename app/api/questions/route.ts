@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
                     connect: {
                        id: user.id
                     }
-                }
+                },
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
             },
             omit: {
                 userId: true,
