@@ -1,52 +1,28 @@
 "use client"
 
-import { toast } from "sonner"
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
-import { getAuthUser } from "@/lib/api/users"
-import { Prisma } from "@/lib/prisma"
+import { useCallback, useContext } from "react"
+import { AuthContext } from "@/lib/context"
+import { toast } from "sonner"
 
 export default function Navbar() {
     const router = useRouter()
-    const [auth, setAuth] = useState(false);
-
-    const handleLogout = useCallback(async () => {
-        try{
-            const res = await fetch("/api/auth/logout", {
-                method: "POST",
-            })
-            if (res.ok){
-                setAuth(false)
-                toast.success("Logged out successfully")
-                router.push("/")
-            }
-        }catch(error){
-            console.error(error)
-            toast.error("Failed to logout")
-        }
-    }, [])
+    const {user, logout} = useContext(AuthContext)
 
     const handleLogin = useCallback(async () => {
         router.push(`/api/auth/login?redirectUrl=${window.location.href}`)
      }, [router])
 
-     const fetchAuthUser = useCallback(async () => {
-        try{
-            const user = await getAuthUser();
-            if(user){
-                setAuth(true)
-            }
-        }catch(error){
-            console.error(error)
+
+     const handleLogout = useCallback(async () => {
+        const ok = await logout()
+        if(ok) {
+          toast.success("Logged out successfully")
+          router.push("/")
         }
-    }, [])
-
-    useEffect(() => {
-        fetchAuthUser()
-    }, [fetchAuthUser])
-
-
+        else toast.error("Failed to logout")
+     }, [logout, router])
 
     return (
         <div className="flex justify-between items-center p-4">
@@ -54,7 +30,7 @@ export default function Navbar() {
                 <h1>Logo</h1>
             </div>
             <div>
-                {auth ? (
+                { user ? (
                     <Button onClick={handleLogout}>Logout</Button>
                 ) : (
                     <Button onClick={handleLogin}>Login</Button> 
