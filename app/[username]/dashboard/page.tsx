@@ -1,5 +1,6 @@
 "use client"
 
+import { Dashboard } from "@/components/dashboard";
 import { AuthContext } from "@/lib/context";
 import { useParams } from "next/navigation";
 import { useContext } from "react";
@@ -16,6 +17,8 @@ export default function Page() {
     return <div>You are unauthorized to access this page</div>
   }
 
-  return  <div>Dashboard for {username}</div>
+  return  <div>Dashboard for {username}
+  <Dashboard/>
+  </div>
 }
 
