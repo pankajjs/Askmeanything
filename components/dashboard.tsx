@@ -1,11 +1,10 @@
 "use client"
 
-import { CardDescription, CardFooter } from "./ui/card";
+import { CardDescription, CardFooter, CardHeader } from "./ui/card";
 
 import {useContext, useState } from "react";
 import { Card } from "./ui/card";
 import { wordGen } from "@/lib/utils";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { AuthContext } from "@/lib/context";
 import { PopoverCalendar } from "./calendar";
@@ -58,14 +57,18 @@ const Questions = () => {
 }
 
 const Replies = () => {
+  const [showQuestion, setShowQuestion] = useState<number | null>(null)
   return Array(10).fill(0).map((_, index) => (
-    <Card key={index} className="w-full p-0">
-      <CardDescription className="text-wrap break-words p-3">
-        {wordGen(200)}
+    <Card key={index} className="w-full p-0 gap-0 my-4">
+      <CardHeader className="flex justify-end text-xs p-4 pb-0">
+        Replies from @{"dummy"}
+      </CardHeader>
+      <CardDescription className="text-wrap break-words px-4 py-2">
+        {wordGen(210)}
       </CardDescription>
-      <CardFooter className="flex-col p-3">
-        <Input placeholder="Type your reply..." className="mb-2" />
-        <Button className="w-full">Reply</Button>
+      <CardFooter className="block px-4">
+        { showQuestion === index && <div className="text-wrap text-sm break-words">{wordGen(100)}</div>}
+        <Button variant={"link"} className="text-xs mx-1 p-0 float-end" onClick={() => setShowQuestion(showQuestion === index ? null : index)}>{showQuestion === index ? "Hide question" : "Show question"}</Button>
       </CardFooter>
     </Card>
   ))
