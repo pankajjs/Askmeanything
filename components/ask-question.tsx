@@ -1,18 +1,20 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { CreateQuestion } from "@/lib/api/questions";
+import { AuthContext } from "@/lib/context";
 
 const MAX_MESSAGE_LENGTH = 200;
 
 export default function AskQuestion({username}: {username: string}) {
     const [message, setMessage] = useState("");
     const [validMessage, setValidMessage] = useState(false);
+    const {user} = useContext(AuthContext)
 
     const handleSend = useCallback(async () => {
-        const question = await CreateQuestion({data: message, username});
+        const question = await CreateQuestion({data: message, username, createdBy: user?.id});
         if(question){
             console.log(question);
             setMessage("");

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma, Prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma"
 
 export async function POST(req: NextRequest) {
     try{
-        const data = await req.json() as {data: string, username: string};
+        const data = await req.json() as {data: string, username: string, createdBy?: string};
 
        const user = await prisma.user.findFirst({
             where: {
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
         const question = await prisma.question.create({
             data: {
                 data: data.data,
+                createdBy: data.createdBy,
                 user: {
                     connect: {
                        id: user.id
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
             },
             omit: {
                 userId: true,
+                createdBy: true,
             }
         })
 

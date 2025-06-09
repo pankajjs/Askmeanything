@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Textarea } from "./ui/textarea";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
-import { createReply } from "@/lib/api/replies";
+import { createReply, getRepliesByUser } from "@/lib/api/replies";
 
 export function Dashboard() {
 
@@ -40,7 +40,7 @@ export function Dashboard() {
        </div>
         <PopoverCalendar date={date} setDate={setDate}/>
       </div>
-      {currentTab === "questions" ? <Questions date={date} /> : <Replies />}
+      {currentTab === "questions" ? <Questions date={date} /> : <Replies date={date} />}
   </div>
 }
 
@@ -50,7 +50,6 @@ const Questions = ({date}: {date: Date}) => {
   const {user} = useContext(AuthContext)
   const [questions, setQuestions] = useState<Questions[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [answer, setAnswer] = useState("")
   
   const fetchQuestions = useCallback(async ()=>{
       const questions = await getQuestionsByUser(user?.id ?? "", 1, 10, date.getTime().toString())
@@ -72,7 +71,7 @@ const Questions = ({date}: {date: Date}) => {
   if(questions.length == 0){
     return <div className="text-center text-sm text-muted-foreground">No questions found</div>
   }
-console.log(answer)
+
   return questions.map((question, index) => (
     <Card key={index} className="w-full gap-0 justify-between my-4 p-0 min-h-30">
       <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
@@ -85,18 +84,60 @@ console.log(answer)
   ))
 }
 
-const Replies = () => {
+const Replies = ({date}: {date: Date}) => {
+  const {user} = useContext(AuthContext)
   const [showQuestion, setShowQuestion] = useState<number | null>(null)
-  return Array(10).fill(0).map((_, index) => (
+  const [replies, setReplies] = useState<Prisma.ReplyGetPayload<{include: {
+    question: {
+      omit: {
+          answered: true,
+          createdAt: true,
+          updatedAt: true,
+          userId: true,
+          id: true,
+          createdBy: true,
+      },
+      include:{
+          user: {
+              select:{
+                  username: true,
+              }
+          }
+      },
+  }
+  }}>[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const fetchReplies = useCallback(async () => {
+    const replies = await getRepliesByUser({userId: user?.id ?? "", page: 1, limit: 10, date: date.getTime().toString()})
+    if(!replies){
+      return;
+    }
+    setReplies(replies)
+    setIsLoading(false)
+  }, [user?.id, date])
+
+  useEffect(() => {
+    fetchReplies()
+  }, [fetchReplies])
+
+  if(isLoading){
+    return <div className="text-center text-sm text-muted-foreground">Loading...</div>
+  }
+
+  if(replies.length === 0){
+    return <div className="text-center text-sm text-muted-foreground">No replies found</div>
+  }
+
+  return replies.map((reply, index) => (
     <Card key={index} className="w-full p-0 gap-0 my-4">
       <CardHeader className="flex justify-end text-xs p-4 pb-0">
-        Replies from @{"dummy"}
+        Replies from {reply.question.user.username}
       </CardHeader>
       <CardDescription className="text-wrap break-words px-4 py-2">
-        {wordGen(210)}
+        {reply.data}
       </CardDescription>
       <CardFooter className="block px-4">
-        { showQuestion === index && <div className="text-wrap text-sm break-words">{wordGen(100)}</div>}
+        { showQuestion === index && <div className="text-wrap text-sm break-words">{reply.question.data}</div>}
         <Button variant={"link"} className="text-xs mx-1 p-0 float-end" onClick={() => setShowQuestion(showQuestion === index ? null : index)}>{showQuestion === index ? "Hide question" : "Show question"}</Button>
       </CardFooter>
     </Card>
