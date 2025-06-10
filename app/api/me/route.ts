@@ -1,10 +1,9 @@
-import { Prisma, prisma } from "@/lib/prisma";
+import { User } from "@/lib/context";
+import { prisma } from "@/lib/prisma";
 import { withAuthentication } from "@/lib/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-type UserData = Prisma.UserCreateInput
-
-async function getUser(req: NextRequest, userData: UserData){
+async function getUser(_req: NextRequest, userData: User){
     try{
         const user = await prisma.user.findUnique({
             where: { 

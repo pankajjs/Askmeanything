@@ -1,7 +1,17 @@
-import { createContext, useContext } from "react";
+import { createContext } from "react";
 import { Prisma } from "./prisma";
 
-export type User = Prisma.UserGetPayload<{}>
+export type User = Prisma.UserGetPayload<{
+    select: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+        updatedAt: true,
+        roles: true,
+    }
+}>
+
 export type AuthContextType = {
     user: User | undefined
     isLoading: boolean

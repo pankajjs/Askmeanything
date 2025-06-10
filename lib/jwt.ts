@@ -8,12 +8,12 @@ export const generateToken = (data: {id: string}): string => {
     })
 }
 
-export const verifyToken = (token: string): any => {
+export const verifyToken = (token: string) => {
     return jwt.verify(token, config.userToken.publicKey, {
         algorithms: ["RS256"]
     })
 }
 
-export const decodeToken = (token: string): any => {
+export const decodeToken = (token: string)  => {
     return jwt.decode(token)
 }

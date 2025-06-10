@@ -1,7 +1,8 @@
 import { OAuth2Client } from "google-auth-library";
+import { config } from "./config";
 
 export const oauth2Client = new OAuth2Client(
-    process.env.AUTH_GOOGLE_ID,
-    process.env.AUTH_GOOGLE_SECRET,
-    process.env.CALLBACK_URL
+    config.AUTH_GOOGLE_ID,
+    config.AUTH_GOOGLE_SECRET,
+    config.CALLBACK_URL
 )

@@ -4,7 +4,6 @@ import { CardDescription, CardFooter, CardHeader } from "./ui/card";
 
 import {useCallback, useContext, useEffect, useState } from "react";
 import { Card } from "./ui/card";
-import { wordGen } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { AuthContext } from "@/lib/context";
 import { PopoverCalendar } from "./calendar";
@@ -44,7 +43,16 @@ export function Dashboard() {
   </div>
 }
 
-type Questions = Prisma.QuestionGetPayload<{}>
+type Questions = Prisma.QuestionGetPayload<{
+  select: {
+    id: true,
+    data: true,
+    createdAt: true,
+    updatedAt: true,
+    userId: true,
+    answered: true,
+  }
+}>
 
 const Questions = ({date}: {date: Date}) => {
   const {user} = useContext(AuthContext)

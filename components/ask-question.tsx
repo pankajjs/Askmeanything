@@ -16,13 +16,12 @@ export default function AskQuestion({username}: {username: string}) {
     const handleSend = useCallback(async () => {
         const question = await CreateQuestion({data: message, username, createdBy: user?.id});
         if(question){
-            console.log(question);
             setMessage("");
             toast.success("Question sent successfully");
         }else{
             toast.error("Failed to send question. Please try again.");
         }
-    }, [message]);
+    }, [message, user?.id, username]);
     
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
         const newMessage = e.currentTarget.innerText ?? "";

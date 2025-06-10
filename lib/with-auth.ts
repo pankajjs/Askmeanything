@@ -5,11 +5,12 @@ import { prisma } from './prisma';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { config } from './config';
 import { cookies } from 'next/headers';
+import { User } from './context';
  
-type Handler = (req: NextRequest, context?: any) => Promise<Response>;
+type Handler = (req: NextRequest, userData: User) => Promise<Response>;
  
-export function withAuthentication(handler: Handler): Handler {
-  return async (req: NextRequest, _context: any) => {
+export function withAuthentication(handler: Handler) {
+  return async (req: NextRequest) => {
     try{
         const token = req.cookies.get(config.userToken.cookieName)?.value;
         
@@ -17,7 +18,7 @@ export function withAuthentication(handler: Handler): Handler {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const { id } = verifyToken(token);
+        const { id } = verifyToken(token) as {id: string};
         
         const user = await prisma.user.findUnique({
             where: {
@@ -25,12 +26,16 @@ export function withAuthentication(handler: Handler): Handler {
             },
         })
 
+        if(!user){
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
         return handler(req, user);
     }catch(error){
         console.error(error)
         if (error instanceof TokenExpiredError){
             let token = req.cookies.get(config.userToken.cookieName)?.value as string;
-            const {id, iat} = decodeToken(token);
+            const {id, iat} = decodeToken(token) as {id: string, iat: number};
 
             if(Math.floor(Date.now() / 1000) - iat > config.userToken.refreshTtl){
                 return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -45,11 +50,16 @@ export function withAuthentication(handler: Handler): Handler {
                 maxAge: config.userToken.ttl
             })
             
-            let user = await prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: {
                     id
                 },
             })
+
+            if(!user){
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            }
+
             return handler(req, user);
         }else{
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

@@ -1,8 +1,9 @@
-import { prisma, Prisma } from "@/lib/prisma";
+import { User } from "@/lib/context";
+import { prisma } from "@/lib/prisma";
 import { withAuthentication } from "@/lib/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-async function getQuestionsByUser(req: NextRequest, userData: Prisma.UserGetPayload<{}>) {
+async function getQuestionsByUser(req: NextRequest, userData: User) {
     try{
         const userId = req.nextUrl.pathname.split("/")[3];
 
