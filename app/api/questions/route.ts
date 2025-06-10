@@ -6,6 +6,7 @@ export async function POST(req: NextRequest) {
     try{
         const data = await req.json() as {data: string, username: string, createdBy?: string};
 
+
        const user = await prisma.user.findFirst({
             where: {
                 username: data.username
@@ -17,6 +18,13 @@ export async function POST(req: NextRequest) {
                 error: API_ERROR.NOT_FOUND.error,
                 message: "User not found"
             }, {status: API_ERROR.NOT_FOUND.status})
+        }
+
+        if(user.id === data.createdBy){
+            return NextResponse.json({
+                error: API_ERROR.BAD_REQUEST.error,
+                message: "You need therapy"
+            }, {status: API_ERROR.BAD_REQUEST.status})
         }
 
         if(data.data.length > 200){
@@ -45,7 +53,7 @@ export async function POST(req: NextRequest) {
         })
 
         return NextResponse.json({
-            message: "Question created successfully",
+            message: "Question sent successfully",
             data: question
         }, {status: 200})
     }catch(error){

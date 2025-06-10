@@ -3,7 +3,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { CreateQuestion } from "@/lib/api/questions";
+import { createQuestion } from "@/lib/api/questions";
 import { AuthContext } from "@/lib/context";
 
 const MAX_MESSAGE_LENGTH = 200;
@@ -14,12 +14,12 @@ export default function AskQuestion({username}: {username: string}) {
     const {user} = useContext(AuthContext)
 
     const handleSend = useCallback(async () => {
-        const question = await CreateQuestion({data: message, username, createdBy: user?.id});
-        if(question){
+        const res = await createQuestion({data: message, username, createdBy: user?.id});
+        if(res.ok){
             setMessage("");
-            toast.success("Question sent successfully");
+            toast.success(res.message);
         }else{
-            toast.error("Failed to send question. Please try again.");
+            toast.error(res.message);
         }
     }, [message, user?.id, username]);
     
