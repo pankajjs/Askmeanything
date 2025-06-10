@@ -12,9 +12,8 @@ export async function GET(req: NextRequest) {
             console.log("Failed to get state from google auth");
             return NextResponse.redirect(new URL("/", req.url))
         }
-        console.log("state", state)
-        const code = req.nextUrl.searchParams.get("code")
 
+        const code = req.nextUrl.searchParams.get("code")
         if(!code){
             console.log("Failed to get code from google auth");
             return NextResponse.redirect(new URL("/", req.url))

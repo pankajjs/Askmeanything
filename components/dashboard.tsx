@@ -149,7 +149,6 @@ const Answer = ({qId}: { qId: string}) => {
   const [answer, setAnswer] = useState("")
   const handleReply = useCallback(async () => {
     const res = await createReply({data: answer, qId: qId})
-    console.log(res)
     if(res){
       toast.success("Reply created successfully")
     }else{

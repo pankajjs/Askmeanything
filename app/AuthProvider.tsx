@@ -1,5 +1,6 @@
 "use client"
 
+import { API_URL } from "@/lib/api/constant";
 import { getAuthUser } from "@/lib/api/users";
 import { AuthContext, User } from "@/lib/context";
 import React, { useCallback, useEffect, useState } from "react";
@@ -20,10 +21,9 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     const logout = useCallback(async () => {
         try{
-            const res = await fetch("/api/auth/logout", {
+            const res = await fetch(`${API_URL}/auth/logout`, {
                 method: "POST",
             })
-            console.log(res.ok, res.status)
             if (res.ok){
                 setUser(undefined)
                 return true;

@@ -5,14 +5,11 @@ import { NextRequest, NextResponse } from "next/server";
 async function CreateReplies(req: NextRequest, userData: Prisma.UserGetPayload<{}>) {
     try{
         const questionId = req.nextUrl.pathname.split("/")[3];
-        console.log(questionId)
-
         if(!questionId){
             return NextResponse.json({error: "Question ID is required"}, {status: 400})
         }
 
         const createRepliesDto = await req.json() as {data: string};
-        
         if(!createRepliesDto.data){
             return NextResponse.json({error: "Data is required"}, {status: 400})
         }
@@ -26,7 +23,6 @@ async function CreateReplies(req: NextRequest, userData: Prisma.UserGetPayload<{
                 id: questionId
             }
         })
-        console.log(question)
         if(!question){
             return NextResponse.json({error: "Question not found"}, {status: 404})
         }

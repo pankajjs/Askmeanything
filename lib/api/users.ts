@@ -1,5 +1,7 @@
+import { API_URL } from "./constant";
+
 export const getUser = async (username: string) => {
-  const res = await fetch(`http://localhost:3000/api/users?username=${username}`, {
+  const res = await fetch(`${API_URL}/users?username=${username}`, {
     method: "POST",
   })
   
@@ -11,7 +13,7 @@ export const getUser = async (username: string) => {
 }
 
 export const getAuthUser = async () => {
-  const res = await fetch("http://localhost:3000/api/me", {
+  const res = await fetch(`${API_URL}/me`, {
     method: "GET",
     credentials: "include",
   })
@@ -24,7 +26,7 @@ export const getAuthUser = async () => {
 }
 
 export const getQuestionsByUser = async (userId: string, page: number, limit: number, date: string) => {
-  const res = await fetch(`http://localhost:3000/api/users/${userId}/questions?page=${page}&limit=${limit}&date=${date}`, {
+  const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&limit=${limit}&date=${date}`, {
     method: "GET",
     credentials: "include",
   })

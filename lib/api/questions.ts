@@ -1,5 +1,6 @@
+import { API_URL } from "./constant";
 export const CreateQuestion = async ({data, username, createdBy}: {data: string, username: string, createdBy?: string}) => {
-    const res = await fetch("http://localhost:3000/api/questions", {
+    const res = await fetch(`${API_URL}/questions`, {
         method: "POST",
         body: JSON.stringify({data, username, createdBy}),
     })
