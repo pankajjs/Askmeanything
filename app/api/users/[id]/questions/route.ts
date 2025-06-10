@@ -1,3 +1,4 @@
+import { API_ERROR } from "@/lib/api-error";
 import { User } from "@/lib/context";
 import { prisma } from "@/lib/prisma";
 import { withAuthentication } from "@/lib/with-auth";
@@ -8,11 +9,17 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         const userId = req.nextUrl.pathname.split("/")[3];
 
         if(!userId){
-            return NextResponse.json({error: "User ID is required"}, {status: 400})
+            return NextResponse.json({
+                error: API_ERROR.BAD_REQUEST.error,
+                message: "User ID is required"
+            }, {status: API_ERROR.BAD_REQUEST.status})
         }
 
         if(userId !== userData.id){
-            return NextResponse.json({error: "Unauthorized"}, {status: 401})
+            return NextResponse.json({
+                error: API_ERROR.FORBIDDEN.error,
+                message: API_ERROR.FORBIDDEN.message
+            }, {status: API_ERROR.FORBIDDEN.status})
         }
 
         const page = Number(req.nextUrl.searchParams.get("page")) || 1;
@@ -21,15 +28,24 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         const date = Number(req.nextUrl.searchParams.get("date") || currentDate);
 
         if(isNaN(date)){
-            return NextResponse.json({error: "Invalid date"}, {status: 400})
+            return NextResponse.json({
+                error: API_ERROR.BAD_REQUEST.error,
+                message: "Invalid date format"
+            }, {status: API_ERROR.BAD_REQUEST.status})
         }
 
         if (date > Date.now()){
-            return NextResponse.json({error: "Date is in the future"}, {status: 400})
+            return NextResponse.json({
+                error: API_ERROR.BAD_REQUEST.error,
+                message: "Date can't be in the future"
+            }, {status: API_ERROR.BAD_REQUEST.status})
         }
 
         if (date < (userData.createdAt - 24 * 60 * 60 * 1000)){
-            return NextResponse.json({message: "No questions found", data: []}, {status: 200})
+            return NextResponse.json({
+                error: API_ERROR.NOT_FOUND.error,
+                message: "No questions found"
+            }, {status: API_ERROR.NOT_FOUND.status})
         }
 
         const questions = await prisma.question.findMany({
@@ -47,9 +63,16 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
             take: Math.min(limit, 100)
         })
 
-        return NextResponse.json({message: "Questions fetched successfully", data: questions})
-    }catch{
-        return NextResponse.json({error: "Internal server error"}, {status: 500})
+        return NextResponse.json({
+            message: "Questions fetched successfully",
+            data: questions
+        }, {status: 200})
+    }catch(error){
+        console.error("Error while fetching questions by user", error)
+        return NextResponse.json({
+            error: API_ERROR.INTERNAL_SERVER_ERROR.error,
+            message: API_ERROR.INTERNAL_SERVER_ERROR.message
+        }, {status: API_ERROR.INTERNAL_SERVER_ERROR.status})
     }
 }
 
