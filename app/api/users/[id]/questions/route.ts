@@ -60,7 +60,10 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
                 createdAt: "desc"
             },
             skip: (page - 1) * limit,
-            take: Math.min(limit, 100)
+            take: Math.min(limit, 100),
+            omit: {
+                createdBy: true,
+            }
         })
 
         return NextResponse.json({
