@@ -2,14 +2,14 @@ import jwt from "jsonwebtoken";
 import { config } from "./config";
 
 export const generateToken = (data: {id: string}): string => {
-    return jwt.sign(data, config.userToken.privateKey, {
+    return jwt.sign(data, process.env.AUTH_PRIVATE_KEY!, {
         algorithm: "RS256",
         expiresIn: config.userToken.ttl
     })
 }
 
 export const verifyToken = (token: string) => {
-    return jwt.verify(token, config.userToken.publicKey, {
+    return jwt.verify(token, process.env.AUTH_PUBLIC_KEY!, {
         algorithms: ["RS256"]
     })
 }

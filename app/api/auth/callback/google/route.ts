@@ -1,9 +1,9 @@
 import { oauth2Client } from "@/lib/auth-client";
 import { Prisma, prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { config } from "@/lib/config";
 import { generateToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
+import { config } from "@/lib/config";
 
 export async function GET(req: NextRequest) {
     try{
@@ -61,8 +61,8 @@ export async function GET(req: NextRequest) {
         
         cookieStore.set(config.userToken.cookieName, accessToken, {
             httpOnly: true,
-            secure: config.NODE_ENV === "production",
-            maxAge: config.userToken.ttl
+            secure: process.env.NODE_ENV === "production",
+            maxAge: parseInt(process.env.USER_TOKEN_TTL!)
         })
 
         return NextResponse.redirect(state)

@@ -46,7 +46,7 @@ export function withAuthentication(handler: Handler) {
             
             cookieStore.set(config.userToken.cookieName, token, {
                 httpOnly: true,
-                secure: config.NODE_ENV === "production",
+                secure: process.env.NODE_ENV === "production",
                 maxAge: config.userToken.ttl
             })
             

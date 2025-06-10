@@ -1,3 +1,1 @@
-import { config } from "../config";
-
-export const API_URL = `${config.DOMAIN}/api`;
+export const API_URL = `${process.env.NEXT_PUBLIC_DOMAIN}/api`;
