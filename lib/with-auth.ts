@@ -6,6 +6,7 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import { config } from './config';
 import { cookies } from 'next/headers';
 import { User } from './context';
+import { API_ERROR } from './api-error';
  
 type Handler = (req: NextRequest, userData: User) => Promise<Response>;
  
@@ -15,7 +16,10 @@ export function withAuthentication(handler: Handler) {
         const token = req.cookies.get(config.userToken.cookieName)?.value;
         
         if (!token) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            return NextResponse.json({
+                error: API_ERROR.UNAUTHORIZED.error,
+                message: API_ERROR.UNAUTHORIZED.message
+            }, { status: API_ERROR.UNAUTHORIZED.status })
         }
 
         const { id } = verifyToken(token) as {id: string};
@@ -27,18 +31,24 @@ export function withAuthentication(handler: Handler) {
         })
 
         if(!user){
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            return NextResponse.json({
+                error: API_ERROR.UNAUTHORIZED.error,
+                message: API_ERROR.UNAUTHORIZED.message
+            }, { status: API_ERROR.UNAUTHORIZED.status })
         }
 
         return handler(req, user);
     }catch(error){
-        console.error(error)
+        console.error("Error while checking authentication", error)
         if (error instanceof TokenExpiredError){
             let token = req.cookies.get(config.userToken.cookieName)?.value as string;
             const {id, iat} = decodeToken(token) as {id: string, iat: number};
 
             if(Math.floor(Date.now() / 1000) - iat > config.userToken.refreshTtl){
-                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+                return NextResponse.json({
+                    error: API_ERROR.UNAUTHORIZED.error,
+                    message: API_ERROR.UNAUTHORIZED.message
+                }, { status: API_ERROR.UNAUTHORIZED.status })
             }
 
             token = generateToken({id});
@@ -57,12 +67,18 @@ export function withAuthentication(handler: Handler) {
             })
 
             if(!user){
-                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+                return NextResponse.json({
+                    error: API_ERROR.UNAUTHORIZED.error,
+                    message: API_ERROR.UNAUTHORIZED.message
+                }, { status: API_ERROR.UNAUTHORIZED.status })
             }
 
             return handler(req, user);
         }else{
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            return NextResponse.json({
+                error: API_ERROR.UNAUTHORIZED.error,
+                message: API_ERROR.UNAUTHORIZED.message
+            }, { status: API_ERROR.UNAUTHORIZED.status })
         }
     }
   };

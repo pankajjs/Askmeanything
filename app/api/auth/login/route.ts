@@ -1,3 +1,4 @@
+import { API_ERROR } from "@/lib/api-error";
 import { oauth2Client } from "@/lib/auth-client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,7 +13,10 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.redirect(oauthUrl)
     }catch(error){
-        console.error(error)
-        return NextResponse.json({error: "Failed to login"}, {status: 500})
+        console.error("Error while logging in", error)
+        return NextResponse.json({
+            error: API_ERROR.INTERNAL_SERVER_ERROR.error,
+            message: API_ERROR.INTERNAL_SERVER_ERROR.message
+        }, {status: API_ERROR.INTERNAL_SERVER_ERROR.status})
     }
 }

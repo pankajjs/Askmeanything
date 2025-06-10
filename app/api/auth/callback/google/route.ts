@@ -9,26 +9,26 @@ export async function GET(req: NextRequest) {
     try{
         const state = req.nextUrl.searchParams.get("state")
         if(!state){
-            console.log("Failed to get state from google auth");
+            console.error("Failed to get state from google auth");
             return NextResponse.redirect(new URL("/", req.url))
         }
 
         const code = req.nextUrl.searchParams.get("code")
         if(!code){
-            console.log("Failed to get code from google auth");
+            console.error("Failed to get code from google auth");
             return NextResponse.redirect(new URL("/", req.url))
         }
         
         const token = await oauth2Client.getToken(code)
         if(!token || !token.tokens.access_token){
-            console.log("Failed to get token from google auth");
-            return
+            console.error("Failed to get token from google auth");
+            return NextResponse.redirect(new URL("/", req.url))
         }
 
         const tokenInfo = await oauth2Client.getTokenInfo(token.tokens.access_token);
 
         if(!tokenInfo.email_verified || !tokenInfo.email){
-            console.log("Email not verified");
+            console.error("Email not verified");
             return NextResponse.redirect(new URL("/", req.url))
         }
 
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.redirect(state)
     }catch(error){
-        console.error(error)
+        console.error("Error while logging in", error)
         return NextResponse.redirect(new URL("/", req.url))
     }
 }

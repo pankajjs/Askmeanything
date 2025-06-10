@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"
+import { API_ERROR } from "@/lib/api-error";
 
 export async function POST(req: NextRequest) {
     try{
@@ -12,11 +13,17 @@ export async function POST(req: NextRequest) {
         })
 
         if(!user){
-            return NextResponse.json({error: "User not found"}, {status: 404})
+            return NextResponse.json({
+                error: API_ERROR.NOT_FOUND.error,
+                message: "User not found"
+            }, {status: API_ERROR.NOT_FOUND.status})
         }
 
         if(data.data.length > 200){
-            return NextResponse.json({error: "Question is too long"}, {status: 400})
+            return NextResponse.json({
+                error: API_ERROR.BAD_REQUEST.error,
+                message: "Question is too long"
+            }, {status: API_ERROR.BAD_REQUEST.status})
         }
 
         const question = await prisma.question.create({
@@ -42,7 +49,10 @@ export async function POST(req: NextRequest) {
             data: question
         }, {status: 200})
     }catch(error){
-        console.log(error);
-        return NextResponse.json({error: "Internal server error"}, {status: 500})
+        console.error("Error while creating question", error)
+        return NextResponse.json({
+            error: API_ERROR.INTERNAL_SERVER_ERROR.error,
+            message: API_ERROR.INTERNAL_SERVER_ERROR.message
+        }, {status: API_ERROR.INTERNAL_SERVER_ERROR.status})
     }
 }
