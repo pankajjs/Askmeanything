@@ -40,7 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar/>
           {children}
-          <Toaster position="bottom-right" richColors />
+          <Toaster position="top-center" richColors offset={80} mobileOffset={80}/>
         </AuthProvider>
       </ThemeProvider>
       </body>
