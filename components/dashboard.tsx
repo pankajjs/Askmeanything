@@ -89,7 +89,7 @@ const Questions = ({date}: {date: Date}) => {
   }
 
   return questions.map((question, index) => (
-    <Card key={index} className="gap-0 justify-between my-4 p-0 min-h-30 max-md:xs:min-w-[90%] md:min-w-110">
+    <Card key={index} className="gap-0 justify-between my-2 p-0 min-h-30 max-md:xs:min-w-[90%] md:min-w-110 w-[90%]">
       <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
         {question.data}
       </CardDescription>
@@ -173,7 +173,7 @@ const Answer = ({qId}: { qId: string}) => {
   }, [answer, qId])
   return (
     <>
-    <Textarea placeholder="Type your message here." className="w-full text-sm resize-none" value={answer} onChange={(e) => setAnswer(e.target.value)}/>
+    <textarea placeholder="Type your message here." className="w-full border-1 scrollbar-hide rounded-sm p-2 text-sm resize-none" value={answer} onChange={(e) => setAnswer(e.target.value)}/>
     <Button className="w-full" onClick={handleReply}>Reply</Button>
     </>
   )
