@@ -7,11 +7,7 @@ export const createReply = async ({data, qId}: {data: string, qId: string}) => {
         credentials: "include",
     })
 
-    if(!res.ok){
-        return;
-    }
-
-    return (await res.json()).data;
+    return await res.json();
 }
 
 export const getRepliesByUser = async ({userId, page, limit, date}: {userId: string, page: number, limit: number, date: string}) => {
@@ -20,9 +16,5 @@ export const getRepliesByUser = async ({userId, page, limit, date}: {userId: str
         method: "GET",
     })
 
-    if(!res.ok){
-        return;
-    }
-    
-    return (await res.json()).data;
+    return await res.json();
 }

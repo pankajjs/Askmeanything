@@ -4,12 +4,8 @@ export const getUser = async (username: string) => {
   const res = await fetch(`${API_URL}/users?username=${username}`, {
     method: "POST",
   })
-  
-  if(!res.ok){
-    return;
-  }
 
-  return (await res.json()).data;
+  return await res.json();
 }
 
 export const getAuthUser = async () => {
@@ -17,12 +13,7 @@ export const getAuthUser = async () => {
     method: "GET",
     credentials: "include",
   })
-
-  if(!res.ok){
-    return;
-  }
-    
-  return (await res.json()).data;
+  return await res.json();
 }
 
 export const getQuestionsByUser = async (userId: string, page: number, limit: number, date: string) => {
@@ -31,9 +22,5 @@ export const getQuestionsByUser = async (userId: string, page: number, limit: nu
     credentials: "include",
   })
 
-  if(!res.ok){
-    return;
-  }
-
-  return (await res.json()).data;
+  return await res.json();
 }
