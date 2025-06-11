@@ -10,15 +10,15 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [isLoading, setIsLoading] = useState(true)
     
     const fetchAuthUser = useCallback(async () => {
-        const user = await getAuthUser()
-        if(user){
-            setUser(user)
+        const res = await getAuthUser()
+        if(!res.error){
+            setUser(res.data)
             setIsLoading(false)
         }else{
             setIsLoading(false)
         }
     }, [])
-
+    
     const logout = useCallback(async () => {
         try{
             const res = await fetch(`${API_URL}/auth/logout`, {

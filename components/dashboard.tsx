@@ -67,12 +67,11 @@ const Questions = ({date}: {date: Date}) => {
   const [isLoading, setIsLoading] = useState(true)
   
   const fetchQuestions = useCallback(async ()=>{
-      const questions = await getQuestionsByUser(user?.id ?? "", 1, 10, date.getTime().toString())
-      if(!questions){
-        return;
+      const res = await getQuestionsByUser(user?.id ?? "", 1, 10, date.getTime().toString())
+      if(!res.error){
+        setQuestions(res.data)
+        setIsLoading(false)
       }
-      setQuestions(questions)
-      setIsLoading(false)
   }, [user?.id, date])
 
   useEffect(() => {
@@ -123,12 +122,11 @@ const Replies = ({date}: {date: Date}) => {
   }}>[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const fetchReplies = useCallback(async () => {
-    const replies = await getRepliesByUser({userId: user?.id ?? "", page: 1, limit: 10, date: date.getTime().toString()})
-    if(!replies){
-      return;
+    const res = await getRepliesByUser({userId: user?.id ?? "", page: 1, limit: 10, date: date.getTime().toString()})
+    if(!res.error){
+      setReplies(res.data)
+      setIsLoading(false)
     }
-    setReplies(replies)
-    setIsLoading(false)
   }, [user?.id, date])
 
   useEffect(() => {
@@ -164,7 +162,7 @@ const Answer = ({qId}: { qId: string}) => {
   const [answer, setAnswer] = useState("")
   const handleReply = useCallback(async () => {
     const res = await createReply({data: answer, qId: qId})
-    if(res){
+    if(!res.error){
       toast.success("Reply created successfully")
     }else{
       toast.error("Failed to send reply")
