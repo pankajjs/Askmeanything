@@ -9,6 +9,12 @@ import { ThemeToggle } from "./theme-toggle"
 import { DashboardIcon, ExitIcon} from "@radix-ui/react-icons"
 import Link from "next/link"
 import { User } from "lucide-react"
+import { DynaPuff } from "next/font/google";
+
+const dynaPuff = DynaPuff({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+})
 
 export default function Navbar() {
     const router = useRouter()
@@ -33,7 +39,7 @@ export default function Navbar() {
             <div className="flex justify-between items-center border-[1px] rounded-full p-4 w-full xs:w-[80%] md:w-[70%] lg:w-[50%]">
                 <div className="">
                     <Link href="/">
-                        Logo
+                        <span className={`${dynaPuff.className} text-2xl font-bold`}>AMA</span>
                     </Link>
                 </div>
                 <div className="nav-links flex items-center justify-center gap-4">
