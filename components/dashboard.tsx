@@ -14,6 +14,7 @@ import { Textarea } from "./ui/textarea";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
 import { createReply, getRepliesByUser } from "@/lib/api/replies";
+import { Calendar } from "./ui/calendar";
 
 export function Dashboard() {
 
@@ -25,21 +26,28 @@ export function Dashboard() {
     setDate(new Date())
     toast.error("Date cannot be in the future")
   }
-  return <div className="px-8">
-      <div className="flex justify-between items-center py-4">
-       <div className="flex gap-4 flex-col">
-       <div className="flex items-center gap-1">
-          <Checkbox id="questions" defaultChecked={currentTab === "questions"} onClick={() => setCurrentTab("questions")} checked={currentTab === "questions"}/>
-          <Label htmlFor="questions">Questions</Label>
+  return <div className="flex flex-col-reverse md:flex-row md:gap-6">
+    <div className="flex justify-between flex-col py-4 items-center">
+      {currentTab === "questions" ? <Questions date={date} /> : <Replies date={date} />}  
+    </div>
+      <div className="flex py-4 justify-between md:flex-col md:justify-start md:gap-4">
+        <div className="hidden md:block">
+          <Calendar className="rounded-md border shadow-sm" captionLayout="dropdown" mode="single" selected={date} onSelect={(date) => setDate(date || new Date())}/>
         </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="replies" checked={currentTab === "replies"} onClick={() => setCurrentTab("replies")}/>
-          <Label htmlFor="replies">Replies</Label>
+        <div className="flex flex-wrap gap-2">
+          <div className="flex justify-center items-center gap-2">
+            <Checkbox id="questions" defaultChecked={currentTab === "questions"} onClick={() => setCurrentTab("questions")} checked={currentTab === "questions"}/>
+            <Label htmlFor="questions">Questions</Label>
+          </div>
+          <div className="flex justify-center items-center gap-2">
+            <Checkbox id="replies" checked={currentTab === "replies"} onClick={() => setCurrentTab("replies")}/>
+            <Label htmlFor="replies">Replies</Label>
+          </div>
         </div>
-       </div>
+      <div className="md:hidden">
         <PopoverCalendar date={date} setDate={setDate}/>
       </div>
-      {currentTab === "questions" ? <Questions date={date} /> : <Replies date={date} />}
+      </div>
   </div>
 }
 
@@ -81,7 +89,7 @@ const Questions = ({date}: {date: Date}) => {
   }
 
   return questions.map((question, index) => (
-    <Card key={index} className="w-full gap-0 justify-between my-4 p-0 min-h-30">
+    <Card key={index} className="gap-0 justify-between my-4 p-0 min-h-30 max-md:xs:min-w-100 md:min-w-110">
       <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
         {question.data}
       </CardDescription>
