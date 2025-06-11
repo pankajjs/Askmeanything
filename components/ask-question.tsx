@@ -23,8 +23,8 @@ export default function AskQuestion({username}: {username: string}) {
         }
     }, [message, user?.id, username]);
     
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
-        const newMessage = e.currentTarget.innerText ?? "";
+    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newMessage = e.target.value;
         if(newMessage.length > MAX_MESSAGE_LENGTH){
             toast.error("Message is too long");
             setMessage(message.slice(0, MAX_MESSAGE_LENGTH));
@@ -33,8 +33,9 @@ export default function AskQuestion({username}: {username: string}) {
         }
     }, [message, setMessage]);
 
-    const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
+    const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
         e.preventDefault();
+        toast.info("Pasting is not allowed")
         return false
     }, []);
 
@@ -46,13 +47,12 @@ export default function AskQuestion({username}: {username: string}) {
         }
     }, [message]);    
     return (
-        <>
-            <div className={`h-[200px] text-wrap scrollbar-hide overflow-auto p-2 border-1 rounded-md`} contentEditable={true} onInput={handleInputChange} onPaste={handlePaste}>
+        <div className="w-full">
+            <textarea onPaste={handlePaste} placeholder="Type your question here..." className="h-[200px] w-full text-wrap scrollbar-hide overflow-auto p-2 border-1 rounded-md" value={message} onChange={handleInputChange}/>
+            <div className="text-sm flex justify-between">
+                <span>{message.length}/{MAX_MESSAGE_LENGTH}</span>
+                <Button disabled={!validMessage} onClick={handleSend} className="w-20">Send</Button>
             </div>
-            <div className="absolute bottom-6 text-sm">{message.length}/{MAX_MESSAGE_LENGTH}</div>
-            <div className="mt-2 flex justify-end">
-                <Button disabled={!validMessage} onClick={handleSend}>Send</Button>
-            </div>
-        </>
+        </div>
     )
 }
