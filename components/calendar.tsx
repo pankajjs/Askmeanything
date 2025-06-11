@@ -15,7 +15,7 @@ export function PopoverCalendar({date, setDate}: {date: Date, setDate: (date: Da
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 float-end">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
             <Button variant="outline" className="w-full justify-start text-left font-normal">
