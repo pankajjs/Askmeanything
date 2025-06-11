@@ -89,7 +89,7 @@ const Questions = ({date}: {date: Date}) => {
   }
 
   return questions.map((question, index) => (
-    <Card key={index} className="gap-0 justify-between my-4 p-0 min-h-30 max-md:xs:min-w-100 md:min-w-110">
+    <Card key={index} className="gap-0 justify-between my-4 p-0 min-h-30 max-md:xs:min-w-[90%] md:min-w-110">
       <CardDescription className="text-wrap break-words p-3 text-sm font-medium">
         {question.data}
       </CardDescription>

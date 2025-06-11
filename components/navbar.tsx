@@ -29,9 +29,8 @@ export default function Navbar() {
      }, [logout, router])
 
     return (
-        <div className="px-8 py-4 lg:px-40 md:px-40 xs:px-24">
-            <div className="lg:px-40">
-            <div className="flex justify-between items-center border-[1px] rounded-full p-4">
+        <div className="px-8 py-4 flex justify-center items-center">
+            <div className="flex justify-between items-center border-[1px] rounded-full p-4 w-full xs:w-[80%] md:w-[70%] lg:w-[50%]">
                 <div className="">
                     <Link href="/">
                         Logo
@@ -51,7 +50,6 @@ export default function Navbar() {
                         <Button onClick={handleLogin}>Login</Button> 
                     )}
                 </div>
-            </div>
             </div>
         </div>
     )
