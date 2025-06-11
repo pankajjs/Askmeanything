@@ -15,7 +15,7 @@ export default function AskQuestion({username}: {username: string}) {
 
     const handleSend = useCallback(async () => {
         const res = await createQuestion({data: message, username, createdBy: user?.id});
-        if(res.ok){
+        if(!res.error){
             setMessage("");
             toast.success(res.message);
         }else{

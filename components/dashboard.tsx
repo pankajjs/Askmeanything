@@ -10,7 +10,6 @@ import { PopoverCalendar } from "./calendar";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { toast } from "sonner";
-import { Textarea } from "./ui/textarea";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
 import { createReply, getRepliesByUser } from "@/lib/api/replies";
