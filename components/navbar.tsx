@@ -29,7 +29,7 @@ export default function Navbar() {
      }, [logout, router])
 
     return (
-        <div className="px-8 py-4 flex justify-center items-center">
+        <div className="px-6 py-4 flex justify-center items-center">
             <div className="flex justify-between items-center border-[1px] rounded-full p-4 w-full xs:w-[80%] md:w-[70%] lg:w-[50%]">
                 <div className="">
                     <Link href="/">

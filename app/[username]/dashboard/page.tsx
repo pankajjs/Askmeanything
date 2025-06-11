@@ -17,7 +17,7 @@ export default function Page() {
     return <div>You are unauthorized to access this page</div>
   }
 
-  return <div className="px-8 xs:px-16 md:px-20 md:flex md:justify-center md:gap-2">
+  return <div className="xs:px-10 md:px-20 md:flex md:justify-center md:gap-2">
     <Dashboard/>
   </div>
 }

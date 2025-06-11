@@ -30,7 +30,7 @@ export function Dashboard() {
     <div className="flex justify-between flex-col py-4 items-center">
       {currentTab === "questions" ? <Questions date={date} /> : <Replies date={date} />}  
     </div>
-      <div className="flex py-4 justify-between md:flex-col md:justify-start md:gap-4">
+      <div className="flex py-4 justify-between md:flex-col md:justify-start md:gap-4 max-md:px-10">
         <div className="hidden md:block">
           <Calendar className="rounded-md border shadow-sm" captionLayout="dropdown" mode="single" selected={date} onSelect={(date) => setDate(date || new Date())}/>
         </div>
