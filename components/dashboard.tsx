@@ -73,7 +73,7 @@ const Questions = ({date}: {date: Date}) => {
   return questions.map((question, index) => (
     <Card
       key={index}
-      className="w-full max-w-xl mx-auto gap-0 my-4 p-0 shadow-md border rounded-md"
+      className="w-full max-w-xl mx-auto gap-0 my-2 p-0 shadow-md border rounded-md"
     >
       <CardHeader className="flex justify-end items-center gap-2 px-4 pt-2 pb-0">
         <Clock className="w-4 h-4 text-muted-foreground" />
