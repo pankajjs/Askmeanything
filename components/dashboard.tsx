@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
 import { wordGen } from "@/lib/utils";
-import { Button } from "./ui/button";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { ReplyIcon, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -84,7 +83,7 @@ const Questions = ({date}: {date: Date}) => {
       <CardDescription
         className="px-4 py-2 pb-1 flex justify-center items-center min-h-20 border-b-1 text-sm font-medium w-full break-words break-all whitespace-pre-wrap overflow-x-auto"
       >
-        {question.data + wordGen(200)}
+        {question.data}
       </CardDescription>
       <CardFooter className="flex justify-between px-4 py-2">
         <TrashIcon
