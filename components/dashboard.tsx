@@ -9,10 +9,10 @@ import { PopoverCalendar } from "./calendar";
 import { toast } from "sonner";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
-import { wordGen } from "@/lib/utils";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { ReplyIcon, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Button } from "./ui/button";
 
 export function Dashboard() {
 
@@ -23,7 +23,7 @@ export function Dashboard() {
     setDate(new Date())
     toast.error("Date cannot be in the future")
   }
-  return <div className="flex flex-col px-6">
+  return <div className="flex flex-col px-6 w-full max-w-2xl">
       <div className="flex justify-end">
           <PopoverCalendar date={date} setDate={setDate}/>
       </div>
@@ -72,7 +72,7 @@ const Questions = ({date}: {date: Date}) => {
   return questions.map((question, index) => (
     <Card
       key={index}
-      className="w-full max-w-xl mx-auto gap-0 my-2 p-0 shadow-md border rounded-md"
+      className="w-full mx-auto gap-0 my-2 p-0 shadow-md border rounded-md"
     >
       <CardHeader className="flex justify-end items-center gap-2 px-4 pt-2 pb-0">
         <Clock className="w-4 h-4 text-muted-foreground" />
@@ -86,14 +86,18 @@ const Questions = ({date}: {date: Date}) => {
         {question.data}
       </CardDescription>
       <CardFooter className="flex justify-between px-4 py-2">
-        <TrashIcon
-        className="w-5 h-5"
+        <Button variant={"ghost"}>
+            <TrashIcon
+          className="w-5 h-5"
           onClick={() => {/* handle delete logic here */}}
-        />
-        <ReplyIcon
+          />
+        </Button>
+       <Button variant={"ghost"}>
+       <ReplyIcon
         className="w-5 h-5"
           onClick={() => {/* handle reply logic here */}}
         />
+       </Button>
       </CardFooter>
     </Card>
   ))

@@ -11,15 +11,11 @@ export default async function Page({params}: {params: Promise<{username: string}
         notFound();
     }
 
-    return <div className="flex flex-col items-center justify-center px-6">
-        <div className="flex flex-col gap-10 w-full sm:w-[70%] md:w-[30%] lg:w-[40%]">
-            <div className="flex justify-end w-full">
-                <UpdateDetails/>
-            </div>
-            <div className="w-full">
-                <div className="text-center py-2 font-bold text-wrap">Ask something interesting to {username}</div>
-                <AskQuestion username={username}/>
-            </div>
+    return <div className="flex flex-col items-center">
+        <div className="max-w-2xl w-full py-6 px-6">
+            <div className="flex justify-end"><UpdateDetails/></div>
+            <div className="text-center py-2 font-bold text-wrap">Ask something interesting to {username}</div>
+            <AskQuestion username={username}/>
         </div>
     </div>
 }
