@@ -13,6 +13,7 @@ import { TrashIcon } from "@radix-ui/react-icons";
 import { ReplyIcon, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
+import { deleteQuestion } from "@/lib/api/questions";
 
 export function Dashboard() {
 
@@ -86,10 +87,9 @@ const Questions = ({date}: {date: Date}) => {
         {question.data}
       </CardDescription>
       <CardFooter className="flex justify-between px-4 py-2">
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"}  onClick={()=>deleteQuestion(question.id)}>
             <TrashIcon
           className="w-5 h-5"
-          onClick={() => {/* handle delete logic here */}}
           />
         </Button>
        <Button variant={"ghost"}>

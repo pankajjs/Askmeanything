@@ -8,3 +8,11 @@ export const createQuestion = async ({data, username, createdBy}: {data: string,
 
    return await res.json();
 }
+
+export const deleteQuestion = async(id: string) => {
+    const res = await fetch(`${API_URL}/questions/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+    })
+    return await res.json();
+}
