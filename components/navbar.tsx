@@ -62,7 +62,7 @@ export default function Navbar() {
                             </ToolTipWrapper>
                         </div>
                     ) : (
-                        <Button onClick={handleLogin}>Login</Button> 
+                        <Button className="rounded-full" onClick={handleLogin}>Login</Button> 
                     )}
                 </div>
             </div>
