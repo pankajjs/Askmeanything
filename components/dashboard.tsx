@@ -93,7 +93,7 @@ const Questions = ({date, answered}: {date: Date, answered: string}) => {
   }
 
   if(questions.length == 0){
-    return <div className="text-center text-sm text-muted-foreground">No questions found</div>
+    return <div className="text-center py-32 text-sm text-muted-foreground mt-8">No questions found</div>
   }
 
   return questions.map((question, index) => (
