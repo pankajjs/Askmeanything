@@ -74,6 +74,8 @@ const Questions = ({date, answered}: {date: Date, answered: string}) => {
       if(!res.error){
         setQuestions(res.data)
         setIsLoading(false)
+      }else{
+        setQuestions([])
       }
   }, [user?.id, date])
 
