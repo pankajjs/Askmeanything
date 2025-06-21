@@ -16,8 +16,17 @@ export const getAuthUser = async () => {
   return await res.json();
 }
 
-export const getQuestionsByUser = async (userId: string, page: number, limit: number, date: string) => {
-  const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&limit=${limit}&date=${date}`, {
+export const getQuestionsByUser = async ({
+  userId, page, limit, date, ans
+}:{ 
+  userId: string,
+  page: number,
+  limit: number,
+  date: string,
+  ans: string,
+}) => {
+
+  const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&limit=${limit}&date=${date}&answered=${ans}`, {
     method: "GET",
     credentials: "include",
   })

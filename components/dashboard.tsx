@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 export function Dashboard() {
 
   const [date, setDate] = useState(new Date());
-  const [selected, setSelected] = useState("Not answered");
+  const [selected, setSelected] = useState("false");
 
 
   if(date > new Date()){
@@ -33,15 +33,14 @@ export function Dashboard() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Not answered">Not answered</SelectItem>
-              <SelectItem value="Answered">Answered</SelectItem>
-              <SelectItem value="Archive">Archive</SelectItem>
+              <SelectItem value="false">Not answered</SelectItem>
+              <SelectItem value="true">Answered</SelectItem>
             </SelectContent>
           </Select>
           <PopoverCalendar date={date} setDate={setDate}/>
       </div>
       <div className="flex flex-col py-4 items-center">
-       <Questions date={date} />
+       <Questions date={date} answered={selected} />
     </div>
   </div>
 }
@@ -57,13 +56,21 @@ type Questions = Prisma.QuestionGetPayload<{
   }
 }>
 
-const Questions = ({date}: {date: Date}) => {
+const Questions = ({date, answered}: {date: Date, answered: string}) => {
   const {user} = useContext(AuthContext)
   const [questions, setQuestions] = useState<Questions[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  
-  const fetchQuestions = useCallback(async ()=>{
-      const res = await getQuestionsByUser(user?.id ?? "", 1, 10, date.getTime().toString())
+
+  const fetchQuestions = useCallback(async ({
+    ans
+  }: {ans: string})=>{
+      const res = await getQuestionsByUser({
+        ans,
+        date: date.getTime().toString(),
+        page: 1,
+        limit: 10,
+        userId: user?.id ?? "",
+      })
       if(!res.error){
         setQuestions(res.data)
         setIsLoading(false)
@@ -71,8 +78,8 @@ const Questions = ({date}: {date: Date}) => {
   }, [user?.id, date])
 
   useEffect(() => {
-    fetchQuestions()
-  }, [fetchQuestions])
+    fetchQuestions({ans: answered})
+  }, [fetchQuestions, answered])
 
   if(isLoading){
     return <div className="text-center text-sm text-muted-foreground">Loading...</div>

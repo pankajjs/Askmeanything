@@ -26,6 +26,7 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         const limit = Number(req.nextUrl.searchParams.get("limit")) || 10;
         const currentDate = Date.now()
         const date = Number(req.nextUrl.searchParams.get("date") || currentDate);
+        const answered = req.nextUrl.searchParams.get("answered") == "true";
 
         if(isNaN(date)){
             return NextResponse.json({
@@ -53,8 +54,9 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
                 userId: userId,
                 createdAt: {
                     gte: new Date(date).setHours(0, 0, 0, 0),
-                    lte: new Date(date).setHours(23, 59, 59, 999)
+                    lte: new Date(date).setHours(23, 59, 59, 999),
                 },
+                answered: answered,
             },
             orderBy: {
                 createdAt: "desc"
