@@ -10,6 +10,7 @@ import { DashboardIcon, ExitIcon} from "@radix-ui/react-icons"
 import Link from "next/link"
 import { User } from "lucide-react"
 import { DynaPuff } from "next/font/google";
+import { ToolTipWrapper } from "./tooltip-wrapper"
 
 const dynaPuff = DynaPuff({
     subsets: ["latin"],
@@ -43,14 +44,22 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className="nav-links flex items-center justify-center gap-4">
-                    <ThemeToggle/>
+                    <ToolTipWrapper content="Change Theme">
+                        <ThemeToggle/>
+                    </ToolTipWrapper>
                     { user ? (
                         <div className="flex items-center justify-center gap-4">
-                            <Link href={`/${user.username}`}><User className="w-4 h-4"/></Link>
-                            <Link href={`/${user.username}/dashboard`}>
-                            <DashboardIcon/>
-                            </Link>
-                            <ExitIcon onClick={handleLogout}/>
+                            <ToolTipWrapper content={user.username}>
+                                <Link href={`/${user.username}`}><User className="w-4 h-4"/></Link>
+                            </ToolTipWrapper>
+                            <ToolTipWrapper content="Dashboard">
+                                <Link href={`/${user.username}/dashboard`}>
+                                    <DashboardIcon/>
+                                </Link>
+                            </ToolTipWrapper>
+                            <ToolTipWrapper content={"Logout"}>
+                                <ExitIcon onClick={handleLogout}/>
+                            </ToolTipWrapper>
                         </div>
                     ) : (
                         <Button onClick={handleLogin}>Login</Button> 
