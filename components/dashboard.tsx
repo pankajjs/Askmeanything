@@ -14,10 +14,12 @@ import { Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
 import { deleteQuestion } from "@/lib/api/questions";
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 
 export function Dashboard() {
 
   const [date, setDate] = useState(new Date());
+  const [selected, setSelected] = useState("Not answered");
 
 
   if(date > new Date()){
@@ -25,7 +27,17 @@ export function Dashboard() {
     toast.error("Date cannot be in the future")
   }
   return <div className="flex flex-col px-6 w-full max-w-2xl">
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+          <Select value={selected} onValueChange={setSelected}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Not answered">Not answered</SelectItem>
+              <SelectItem value="Answered">Answered</SelectItem>
+              <SelectItem value="Archive">Archive</SelectItem>
+            </SelectContent>
+          </Select>
           <PopoverCalendar date={date} setDate={setDate}/>
       </div>
       <div className="flex flex-col py-4 items-center">
