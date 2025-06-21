@@ -9,7 +9,7 @@ import { PopoverCalendar } from "./calendar";
 import { toast } from "sonner";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { ChatBubbleIcon, TrashIcon } from "@radix-ui/react-icons";
 import { ReplyIcon, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
@@ -93,7 +93,7 @@ const Questions = ({date}: {date: Date}) => {
           />
         </Button>
        <Button variant={"ghost"}>
-       <ReplyIcon
+       <ChatBubbleIcon
         className="w-5 h-5"
           onClick={() => {/* handle reply logic here */}}
         />
