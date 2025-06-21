@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { getQuestionsByUser } from "@/lib/api/users";
 import { Prisma } from "@/lib/prisma";
 import { ChatBubbleIcon, TrashIcon } from "@radix-ui/react-icons";
-import { ReplyIcon, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
 import { deleteQuestion } from "@/lib/api/questions";
