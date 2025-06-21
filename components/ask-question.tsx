@@ -48,7 +48,7 @@ export default function AskQuestion({username}: {username: string}) {
     }, [message]);    
     return (
         <div className="w-full">
-            <textarea onPaste={handlePaste} placeholder="Type your question here..." className="h-[200px] w-full text-wrap scrollbar-hide overflow-auto p-2 border-1 rounded-md" value={message} onChange={handleInputChange}/>
+            <textarea onPaste={handlePaste} placeholder="Type your question here..." className="min-h-[150px] max-h-[150px] w-full text-wrap scrollbar-hide overflow-auto p-2 border-1 rounded-md" value={message} onChange={handleInputChange}/>
             <div className="text-sm flex justify-between">
                 <span>{message.length}/{MAX_MESSAGE_LENGTH}</span>
                 <Button disabled={!validMessage} onClick={handleSend} className="w-20">Send</Button>

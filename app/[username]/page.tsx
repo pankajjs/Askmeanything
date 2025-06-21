@@ -14,8 +14,10 @@ export default async function Page({params}: {params: Promise<{username: string}
     return <div className="flex flex-col items-center">
         <div className="max-w-2xl w-full py-6 px-6">
             <div className="flex justify-end"><UpdateDetails/></div>
-            <div className="text-center py-2 font-bold text-wrap">Ask something interesting to {username}</div>
-            <AskQuestion username={username}/>
+            <div className="my-16">
+                <div className="text-center py-2 font-bold text-wrap">Ask something interesting to {username}</div>
+                <AskQuestion username={username}/>
+            </div>
         </div>
     </div>
 }
