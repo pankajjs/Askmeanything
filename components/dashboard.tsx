@@ -14,7 +14,7 @@ import { Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
 import { deleteQuestion } from "@/lib/api/questions";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 export function Dashboard() {
 
