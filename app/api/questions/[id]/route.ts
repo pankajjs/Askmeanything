@@ -1,4 +1,4 @@
-import { API_ERROR } from "@/lib/api-error";
+import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 import { prisma } from "@/lib/prisma";
 import { withAuthentication } from "@/lib/with-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,6 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
 async function deleteQuestion(req: NextRequest) {
     try{
         const id = req.nextUrl.pathname.split("/")[3];
+        
+        if(!id){
+            return handleError(new BadRequestError("Id is required"));
+        }
+
         const question = await prisma.question.findUnique({
             where: {
                 id
@@ -13,12 +18,7 @@ async function deleteQuestion(req: NextRequest) {
         })
         
         if(!question){
-            return NextResponse.json({
-                error: API_ERROR.NOT_FOUND.error,
-                message: "Question not found",
-            }, {
-                status: API_ERROR.NOT_FOUND.status,
-            })
+            return handleError(new NotFoundError("Question not found"));
         }
 
         await prisma.question.delete({
@@ -30,10 +30,7 @@ async function deleteQuestion(req: NextRequest) {
         }, {status: 200});
     }catch(error){
         console.error("Error while deleting question", error)
-        return NextResponse.json({
-            error: API_ERROR.INTERNAL_SERVER_ERROR.error,
-            message: API_ERROR.INTERNAL_SERVER_ERROR.message
-        }, {status: API_ERROR.INTERNAL_SERVER_ERROR.status})
+        return handleError();
     }
 }
 

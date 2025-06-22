@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"
-import { API_ERROR } from "@/lib/api-error";
+import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 
 export async function POST(req: NextRequest) {
     try{
@@ -14,24 +14,15 @@ export async function POST(req: NextRequest) {
         })
 
         if(!user){
-            return NextResponse.json({
-                error: API_ERROR.NOT_FOUND.error,
-                message: "User not found"
-            }, {status: API_ERROR.NOT_FOUND.status})
+            return handleError(new NotFoundError("User not found"));
         }
 
         if(user.id === data.createdBy){
-            return NextResponse.json({
-                error: API_ERROR.BAD_REQUEST.error,
-                message: "You need therapy"
-            }, {status: API_ERROR.BAD_REQUEST.status})
+            return handleError(new BadRequestError("You need therapy"))
         }
 
         if(data.data.length > 200){
-            return NextResponse.json({
-                error: API_ERROR.BAD_REQUEST.error,
-                message: "Question is too long"
-            }, {status: API_ERROR.BAD_REQUEST.status})
+            return handleError(new BadRequestError("Question is too long"))
         }
 
         const question = await prisma.question.create({
@@ -58,9 +49,6 @@ export async function POST(req: NextRequest) {
         }, {status: 200})
     }catch(error){
         console.error("Error while creating question", error)
-        return NextResponse.json({
-            error: API_ERROR.INTERNAL_SERVER_ERROR.error,
-            message: API_ERROR.INTERNAL_SERVER_ERROR.message
-        }, {status: API_ERROR.INTERNAL_SERVER_ERROR.status})
+        return handleError();
     }
 }

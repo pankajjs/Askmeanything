@@ -6,7 +6,7 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import { config } from './config';
 import { cookies } from 'next/headers';
 import { User } from './context';
-import { API_ERROR } from './api-error';
+import { handleError, UnauthorizedError } from './errors';
  
 type Handler = (req: NextRequest, userData: User) => Promise<Response>;
  
@@ -16,10 +16,7 @@ export function withAuthentication(handler: Handler) {
         const token = req.cookies.get(config.userToken.cookieName)?.value;
         
         if (!token) {
-            return NextResponse.json({
-                error: API_ERROR.UNAUTHORIZED.error,
-                message: API_ERROR.UNAUTHORIZED.message
-            }, { status: API_ERROR.UNAUTHORIZED.status })
+            return handleError(new UnauthorizedError())
         }
 
         const { id } = verifyToken(token) as {id: string};
@@ -31,10 +28,7 @@ export function withAuthentication(handler: Handler) {
         })
 
         if(!user){
-            return NextResponse.json({
-                error: API_ERROR.UNAUTHORIZED.error,
-                message: API_ERROR.UNAUTHORIZED.message
-            }, { status: API_ERROR.UNAUTHORIZED.status })
+            return handleError(new UnauthorizedError())
         }
 
         return handler(req, user);
@@ -45,10 +39,7 @@ export function withAuthentication(handler: Handler) {
             const {id, iat} = decodeToken(token) as {id: string, iat: number};
 
             if(Math.floor(Date.now() / 1000) - iat > config.userToken.refreshTtl){
-                return NextResponse.json({
-                    error: API_ERROR.UNAUTHORIZED.error,
-                    message: API_ERROR.UNAUTHORIZED.message
-                }, { status: API_ERROR.UNAUTHORIZED.status })
+                return handleError(new UnauthorizedError())
             }
 
             token = generateToken({id});
@@ -67,18 +58,12 @@ export function withAuthentication(handler: Handler) {
             })
 
             if(!user){
-                return NextResponse.json({
-                    error: API_ERROR.UNAUTHORIZED.error,
-                    message: API_ERROR.UNAUTHORIZED.message
-                }, { status: API_ERROR.UNAUTHORIZED.status })
+                return handleError(new UnauthorizedError());
             }
 
             return handler(req, user);
         }else{
-            return NextResponse.json({
-                error: API_ERROR.UNAUTHORIZED.error,
-                message: API_ERROR.UNAUTHORIZED.message
-            }, { status: API_ERROR.UNAUTHORIZED.status })
+            return handleError(new UnauthorizedError());
         }
     }
   };

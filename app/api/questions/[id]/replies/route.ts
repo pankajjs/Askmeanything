@@ -1,4 +1,4 @@
-import { API_ERROR } from "@/lib/api-error";
+import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
 import { User } from "@/lib/context";
 import { prisma } from "@/lib/prisma";
 import { withAuthentication } from "@/lib/with-auth";
@@ -7,26 +7,19 @@ import { NextRequest, NextResponse } from "next/server";
 async function CreateReplies(req: NextRequest, _userData: User) {
     try{
         const questionId = req.nextUrl.pathname.split("/")[3];
+        
         if(!questionId){
-            return NextResponse.json({
-                error: API_ERROR.BAD_REQUEST.error,
-                message: "Question ID is required"
-            }, {status: API_ERROR.BAD_REQUEST.status})
+            return handleError(new BadRequestError("Question Id is required"));
         }
 
         const createRepliesDto = await req.json() as {data: string};
+        
         if(!createRepliesDto.data){
-            return NextResponse.json({
-                error: API_ERROR.BAD_REQUEST.error,
-                message: "Data is required"
-            }, {status: API_ERROR.BAD_REQUEST.status})
+            return handleError(new BadRequestError("Data is required"));
         }
 
         if(createRepliesDto.data.length > 200){
-            return NextResponse.json({
-                error: API_ERROR.BAD_REQUEST.error,
-                message: "Data is too long"
-            }, {status: API_ERROR.BAD_REQUEST.status})
+            return handleError(new BadRequestError("Replies is too long"))
         }
 
         const question = await prisma.question.findUnique({
@@ -34,18 +27,13 @@ async function CreateReplies(req: NextRequest, _userData: User) {
                 id: questionId
             }
         })
+        
         if(!question){
-            return NextResponse.json({
-                error: API_ERROR.NOT_FOUND.error,
-                message: "Question not found"
-            }, {status: API_ERROR.NOT_FOUND.status})
+            return handleError(new NotFoundError("Question not found"))
         }
 
         if(question.answered){
-            return NextResponse.json({
-                error: API_ERROR.CONFLICT.error,
-                message: "Question already answered"
-            }, {status: API_ERROR.CONFLICT.status})
+            return handleError(new ConflictError("Question already answered"));
         }
 
         const [_, createdReply] = await prisma.$transaction([
@@ -75,10 +63,7 @@ async function CreateReplies(req: NextRequest, _userData: User) {
         return NextResponse.json({message: "Reply created successfully", data: createdReply}, {status: 200})
     }catch(error){
         console.error("Error while creating reply", error)
-        return NextResponse.json({
-            error: API_ERROR.INTERNAL_SERVER_ERROR.error,
-            message: API_ERROR.INTERNAL_SERVER_ERROR.message
-        }, {status: API_ERROR.INTERNAL_SERVER_ERROR.status})
+        return handleError();
     }
 }
 
