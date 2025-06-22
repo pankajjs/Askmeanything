@@ -16,7 +16,6 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
 import { deleteQuestion } from "@/lib/api/questions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { wordGen } from "@/lib/utils";
 
 export function Dashboard() {
 
@@ -121,11 +120,10 @@ const Questions = ({date, answered}: {date: Date, answered: string}) => {
             </span>
           </div>
         </div>
-       <Button variant={"ghost"}>
-       <ChatBubbleIcon
-        className="w-5 h-5"
-          onClick={() => {/* handle reply logic here */}}
-        />
+       <Button variant={"ghost"} onClick={() => {
+            toast.error("Feature not available")
+          }}>
+          <ChatBubbleIcon className="w-5 h-5"/>
        </Button>
       </CardFooter>
     </Card>
