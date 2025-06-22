@@ -1,5 +1,5 @@
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { decodeToken, generateToken, verifyToken } from './jwt';
 import { prisma } from './prisma';
 import { TokenExpiredError } from 'jsonwebtoken';
