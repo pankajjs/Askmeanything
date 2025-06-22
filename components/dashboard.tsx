@@ -16,6 +16,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "./ui/button";
 import { deleteQuestion } from "@/lib/api/questions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { wordGen } from "@/lib/utils";
 
 export function Dashboard() {
 
@@ -101,23 +102,25 @@ const Questions = ({date, answered}: {date: Date, answered: string}) => {
       key={index}
       className="w-full mx-auto gap-0 my-2 p-0 shadow-md border rounded-md"
     >
-      <CardHeader className="flex justify-end items-center gap-2 px-4 pt-2 pb-0">
-        <Clock className="w-4 h-4 text-muted-foreground" />
-        <span className="text-xs text-muted-foreground">
-          {formatDistanceToNow(new Date(question.createdAt), { addSuffix: true })}
-        </span>
-      </CardHeader>
       <CardDescription
         className="px-4 py-2 pb-1 flex justify-center items-center min-h-20 border-b-1 text-sm font-medium w-full break-words break-all whitespace-pre-wrap overflow-x-auto"
       >
         {question.data}
       </CardDescription>
       <CardFooter className="flex justify-between px-4 py-2">
-        <Button variant={"ghost"}  onClick={()=>deleteQuestion(question.id)}>
-            <TrashIcon
-          className="w-5 h-5"
-          />
-        </Button>
+        <div className="flex justify-center items-center gap-2">
+          <Button variant={"ghost"}  onClick={()=>deleteQuestion(question.id)}>
+              <TrashIcon
+            className="w-5 h-5"
+            />
+          </Button>
+          <div className="flex gap-2">
+            <Clock className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">
+              {formatDistanceToNow(new Date(question.createdAt), { addSuffix: true })}
+            </span>
+          </div>
+        </div>
        <Button variant={"ghost"}>
        <ChatBubbleIcon
         className="w-5 h-5"
