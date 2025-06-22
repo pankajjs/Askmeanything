@@ -21,6 +21,7 @@ model User {
   updatedAt Int
   questions Question[]
   roles Json
+  status String?
 }
 model Question {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId

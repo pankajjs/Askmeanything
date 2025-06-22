@@ -9,6 +9,7 @@ export type User = Prisma.UserGetPayload<{
         createdAt: true,
         updatedAt: true,
         roles: true,
+        status: true,
     }
 }>
 
@@ -21,5 +22,5 @@ export type AuthContextType = {
 export const AuthContext = createContext<AuthContextType>({
     user: undefined,
     isLoading: true,
-    logout: async () => false
+    logout: async () => false,
 })

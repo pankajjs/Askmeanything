@@ -16,6 +16,20 @@ export const getAuthUser = async () => {
   return await res.json();
 }
 
+export const updateUser = async ({
+  username, status
+}: {username?: string, status?: string}) => {
+  const res = await fetch(`${API_URL}/me`, {
+    method: "PATCH",
+    credentials: "include",
+    body: JSON.stringify({
+      username,
+      status,
+    })
+  })
+  return await res.json();
+}
+
 export const getQuestionsByUser = async ({
   userId, page, limit, date, ans
 }:{ 

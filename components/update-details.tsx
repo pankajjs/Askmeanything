@@ -1,14 +1,24 @@
 "use client"
 import { Button } from "./ui/button"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { AuthContext, User } from "@/lib/context"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
+import { updateUser } from "@/lib/api/users"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 
 export const UpdateDetails = ({user}:{user: User}) => {
     const {user: authUser} = useContext(AuthContext);
+    const router = useRouter();
+    
+    const [userDetails, setUserDetails] = useState({
+        username: user?.username ?? "",
+        status: user?.status ?? `Ask something interesting to ${user?.username}`
+    })
+
     return (
         user?.username === authUser?.username &&
         <Dialog>
@@ -27,25 +37,41 @@ export const UpdateDetails = ({user}:{user: User}) => {
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="name-1">Status</Label>
-                <div className="flex gap-3">
-                    <Input id="name-1" className="" name="name" defaultValue={`Ask something interesting to ${authUser.username}`} />
-                    <Button>Save</Button>
+                <div className="grid gap-3">
+                    <Label htmlFor="status-1">Status</Label>
+                    <Input id="status-1" className="" name="status" value={userDetails.status} onChange={(e)=>{
+                        setUserDetails((p)=>{
+                            return {
+                                ...p,
+                                status: e.target.value,
+                            }
+                        });
+                    }} />
                 </div>
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="username-1">Username</Label>
-                <div className="flex gap-3">
-                <Input id="username-1" name="username" defaultValue={authUser.username} />
-                <Button>Save</Button>
+                <div className="grid gap-3">
+                    <Label htmlFor="username-1">Username</Label>
+                    <Input id="username-1" name="username" value={userDetails.username} onChange={(e)=>{
+                        setUserDetails((p)=>{
+                            return {
+                                ...p,
+                                username: e.target.value,
+                            }
+                        });
+                    }}/>
                 </div>
-              </div>
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline" className="w-full">Cancel</Button>
-              </DialogClose>
+            <DialogFooter className="flex">
+                <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button type="submit" onClick={async ()=>{
+                    const res = await updateUser({
+                        username: userDetails.username,
+                        status: userDetails.status
+                    }) as {message: string, data: User}
+                    toast(res.message);
+                    router.push(`/${res.data.username}`)
+                }}>Save</Button>
             </DialogFooter>
           </DialogContent>
         </form>
