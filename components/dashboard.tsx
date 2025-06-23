@@ -19,14 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 
 export function Dashboard() {
 
-  const [date, setDate] = useState(new Date());
   const [selected, setSelected] = useState("false");
 
-
-  if(date > new Date()){
-    setDate(new Date())
-    toast.error("Date cannot be in the future")
-  }
   return <div className="flex flex-col px-6 w-full max-w-2xl">
       <div className="flex justify-end gap-2">
           <Select value={selected} onValueChange={setSelected}>
@@ -38,10 +32,10 @@ export function Dashboard() {
               <SelectItem value="true">Answered</SelectItem>
             </SelectContent>
           </Select>
-          <PopoverCalendar date={date} setDate={setDate}/>
+          {/* <PopoverCalendar date={date} setDate={setDate}/> */}
       </div>
       <div className="flex flex-col py-4 items-center">
-       <Questions date={date} answered={selected} />
+       <Questions answered={selected} />
     </div>
   </div>
 }
@@ -57,7 +51,7 @@ type Questions = Prisma.QuestionGetPayload<{
   }
 }>
 
-const Questions = ({date, answered}: {date: Date, answered: string}) => {
+const Questions = ({answered}: {answered: string}) => {
   const {user} = useContext(AuthContext)
   const [questions, setQuestions] = useState<Questions[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -67,7 +61,6 @@ const Questions = ({date, answered}: {date: Date, answered: string}) => {
   }: {ans: string})=>{
       const res = await getQuestionsByUser({
         ans,
-        date: date.getTime().toString(),
         page: 1,
         limit: 10,
         userId: user?.id ?? "",
@@ -78,7 +71,7 @@ const Questions = ({date, answered}: {date: Date, answered: string}) => {
       }else{
         setQuestions([])
       }
-  }, [user?.id, date])
+  }, [user?.id])
 
   useEffect(() => {
     fetchQuestions({ans: answered})

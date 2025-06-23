@@ -18,22 +18,9 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
 
         const page = Number(req.nextUrl.searchParams.get("page")) || 1;
         const limit = Number(req.nextUrl.searchParams.get("limit")) || 10;
-        const currentDate = Date.now()
-        const date = Number(req.nextUrl.searchParams.get("date") || currentDate);
         const answered = req.nextUrl.searchParams.get("answered") == "true";
-
-        if(isNaN(date)){
-            return handleError(new BadRequestError("Invalid date format"));
-        }
-
-        if (date > Date.now()){
-            return handleError(new BadRequestError("Date can't be in the future"));
-        }
-
-        if (date < (userData.createdAt - 24 * 60 * 60 * 1000)){
-            return handleError(new NotFoundError("No question found"));
-        }
-
+        const date = Date.now()
+        
         const questions = await prisma.question.findMany({
             where: {
                 userId: userId,

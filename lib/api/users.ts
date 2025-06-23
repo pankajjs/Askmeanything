@@ -31,16 +31,15 @@ export const updateUser = async ({
 }
 
 export const getQuestionsByUser = async ({
-  userId, page, limit, date, ans
+  userId, page, limit, ans
 }:{ 
   userId: string,
   page: number,
   limit: number,
-  date: string,
   ans: string,
 }) => {
 
-  const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&limit=${limit}&date=${date}&answered=${ans}`, {
+  const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&limit=${limit}&answered=${ans}`, {
     method: "GET",
     credentials: "include",
   })
