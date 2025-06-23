@@ -8,7 +8,9 @@ import { ChatBubbleIcon } from "@radix-ui/react-icons"
 import { Question } from "@/lib/context"
 
 export const Questions = ({questions}: {questions: Question[]}) => {
-    return questions.map((question, index) => (
+    return questions.length == 0 ? 
+    <div className="text-center py-32 text-sm text-muted-foreground mt-8">No questions found</div> : 
+    questions.map((question, index) => (
       <Card
         key={index}
         className="w-full mx-auto gap-0 my-2 p-0 shadow-md border rounded-md"
