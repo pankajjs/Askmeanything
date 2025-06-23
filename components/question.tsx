@@ -6,8 +6,15 @@ import { formatDistanceToNow } from "date-fns"
 import { toast } from "sonner"
 import { ChatBubbleIcon } from "@radix-ui/react-icons"
 import { Question } from "@/lib/context"
+import { useMutation } from "@tanstack/react-query"
 
 export const Questions = ({questions}: {questions: Question[]}) => {
+    const mutation = useMutation({
+        mutationFn: ({id}:{id: string}) => deleteQuestion(id),
+        onError(error) {
+            toast.error(error.message);
+        },
+    })
     return questions.length == 0 ? 
     <div className="text-center py-32 text-sm text-muted-foreground mt-8">No questions found</div> : 
     questions.map((question, index) => (
@@ -22,7 +29,7 @@ export const Questions = ({questions}: {questions: Question[]}) => {
         </CardDescription>
         <CardFooter className="flex justify-between px-4 py-2">
           <div className="flex justify-center items-center gap-2">
-            <Button variant={"ghost"}  onClick={()=>deleteQuestion(question.id)}>
+            <Button variant={"ghost"}  onClick={()=>mutation.mutateAsync({id: question.id})}>
                 <TrashIcon
               className="w-5 h-5"
               />

@@ -14,5 +14,10 @@ export const deleteQuestion = async(id: string) => {
         method: "DELETE",
         credentials: "include",
     })
+    
+    if(!res.ok){
+        throw new Error("Error while deleting question")
+    }
+
     return await res.json();
 }
