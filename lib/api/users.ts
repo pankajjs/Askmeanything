@@ -1,3 +1,4 @@
+import { Question } from "../context";
 import { API_URL } from "./constant";
 
 export const getUser = async (username: string) => {
@@ -31,18 +32,20 @@ export const updateUser = async ({
 }
 
 export const getQuestionsByUser = async ({
-  userId, page, limit, ans
+  userId, page, ans
 }:{ 
   userId: string,
   page: number,
-  limit: number,
   ans: string,
-}) => {
-
-  const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&limit=${limit}&answered=${ans}`, {
-    method: "GET",
-    credentials: "include",
-  })
-
-  return await res.json();
+}):Promise<Question[]> => {
+    const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&answered=${ans}`, {
+      method: "GET",
+      credentials: "include",
+    })
+    
+    if(!res.ok){
+      throw new Error("Error while fetching questions")
+    }
+    
+    return (await res.json()).data;
 }

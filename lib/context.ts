@@ -13,6 +13,17 @@ export type User = Prisma.UserGetPayload<{
     }
 }>
 
+export type Question = Prisma.QuestionGetPayload<{
+    select: {
+        id: true;
+        createdAt: true;
+        updatedAt: true;
+        data: true;
+        answered: true;
+        userId: true;
+    }
+}>
+
 export type AuthContextType = {
     user: User | undefined
     isLoading: boolean

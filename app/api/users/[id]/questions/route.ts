@@ -20,7 +20,7 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         const limit = Number(req.nextUrl.searchParams.get("limit")) || 10;
         const answered = req.nextUrl.searchParams.get("answered") == "true";
         const date = Date.now()
-        
+
         const questions = await prisma.question.findMany({
             where: {
                 userId: userId,
@@ -49,6 +49,5 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         return handleError();
     }
 }
-
 
 export const GET = withAuthentication(getQuestionsByUser)
