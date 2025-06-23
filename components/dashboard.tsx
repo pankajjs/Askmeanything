@@ -106,7 +106,7 @@ const Questions = ({answered}: {answered: string}) => {
             className="w-5 h-5"
             />
           </Button>
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             <Clock className="w-4 h-4 text-muted-foreground" />
             <span className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(question.createdAt), { addSuffix: true })}
