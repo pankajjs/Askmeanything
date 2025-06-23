@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Questions } from "./question";
 
 export function Dashboard() {
-  const [page, setPage] = useState(1);
   const [selected, setSelected] = useState("false");
   
   const { user } = useContext(AuthContext)
@@ -18,8 +17,8 @@ export function Dashboard() {
   const {
     isPending, isError, data, error
   } = useQuery({
-    queryKey: ["questions", userId, page, selected],
-    queryFn: ()=>getQuestionsByUser({userId, page, ans: selected}),
+    queryKey: ["questions", userId, selected],
+    queryFn: ()=>getQuestionsByUser({userId, ans: selected}),
     retry(failureCount) {
         return failureCount < 1;
     },

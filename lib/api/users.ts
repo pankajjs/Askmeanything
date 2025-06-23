@@ -32,13 +32,12 @@ export const updateUser = async ({
 }
 
 export const getQuestionsByUser = async ({
-  userId, page, ans
+  userId, ans
 }:{ 
   userId: string,
-  page: number,
   ans: string,
 }):Promise<Question[]> => {
-    const res = await fetch(`${API_URL}/users/${userId}/questions?page=${page}&answered=${ans}`, {
+    const res = await fetch(`${API_URL}/users/${userId}/questions?answered=${ans}`, {
       method: "GET",
       credentials: "include",
     })
@@ -46,6 +45,6 @@ export const getQuestionsByUser = async ({
     if(!res.ok){
       throw new Error("Error while fetching questions")
     }
-    
+
     return (await res.json()).data;
 }

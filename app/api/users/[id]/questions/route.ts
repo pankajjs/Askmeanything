@@ -1,4 +1,4 @@
-import { BadRequestError, ForbiddenError, handleError, NotFoundError } from "@/lib/errors";
+import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
 import { User } from "@/lib/context";
 import { prisma } from "@/lib/prisma";
 import { withAuthentication } from "@/lib/with-auth";
@@ -16,8 +16,6 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
             return handleError(new ForbiddenError());
         }
 
-        const page = Number(req.nextUrl.searchParams.get("page")) || 1;
-        const limit = Number(req.nextUrl.searchParams.get("limit")) || 10;
         const answered = req.nextUrl.searchParams.get("answered") == "true";
         const date = Date.now()
 
@@ -33,8 +31,6 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
             orderBy: {
                 createdAt: "desc"
             },
-            skip: (page - 1) * limit,
-            take: Math.min(limit, 100),
             omit: {
                 createdBy: true,
             }
