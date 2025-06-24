@@ -6,14 +6,19 @@ import { formatDistanceToNow } from "date-fns"
 import { toast } from "sonner"
 import { ChatBubbleIcon } from "@radix-ui/react-icons"
 import { Question } from "@/lib/types"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const Questions = ({questions}: {questions: Question[]}) => {
+    const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: ({id}:{id: string}) => deleteQuestion(id),
         onError(error) {
             toast.error(error.message);
         },
+        onSuccess(){
+            queryClient.invalidateQueries({queryKey: ["questions"]})
+            toast.success("Question deleted")
+        }
     })
     return questions.length == 0 ? 
     <div className="text-center py-32 text-sm text-muted-foreground mt-8">No questions found</div> : 
