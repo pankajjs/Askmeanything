@@ -18,7 +18,7 @@ export function Dashboard() {
     isPending, isError, data, error
   } = useQuery({
     queryKey: ["questions", userId, selected],
-    queryFn: ()=>getQuestionsByUser({userId, ans: selected}),
+    queryFn: () => getQuestionsByUser({userId, ans: selected}),
     retry(failureCount) {
         return failureCount < 1;
     },

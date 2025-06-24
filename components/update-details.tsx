@@ -1,4 +1,5 @@
 "use client"
+
 import { Button } from "./ui/button"
 import { useContext, useState } from "react"
 import { AuthContext, User } from "@/lib/context"
@@ -8,6 +9,7 @@ import { Input } from "./ui/input"
 import { updateUser } from "@/lib/api/users"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
 
 
 export const UpdateDetails = ({user}:{user: User}) => {
@@ -17,6 +19,22 @@ export const UpdateDetails = ({user}:{user: User}) => {
     const [userDetails, setUserDetails] = useState({
         username: user?.username ?? "",
         status: user?.status ?? `Ask something interesting to ${user?.username}`
+    })
+
+    const updateUserMutation = useMutation({
+        mutationFn: () => updateUser({
+            username: userDetails.username,
+            status: userDetails.status
+        }),
+        onSuccess(data){
+            if(data){
+                toast.success("Update your details");
+                router.push(`/${data.username}`)
+            }
+        },
+        onError(){
+            toast.error("Failed to update your details")
+        }
     })
 
     return (
@@ -64,14 +82,7 @@ export const UpdateDetails = ({user}:{user: User}) => {
                 <DialogClose asChild>
                     <Button variant="outline">Cancel</Button>
                 </DialogClose>
-                <Button type="submit" onClick={async ()=>{
-                    const res = await updateUser({
-                        username: userDetails.username,
-                        status: userDetails.status
-                    }) as {message: string, data: User}
-                    toast(res.message);
-                    router.push(`/${res.data.username}`)
-                }}>Save</Button>
+                <Button type="submit" onClick={()=>updateUserMutation.mutateAsync()}>Save</Button>
             </DialogFooter>
           </DialogContent>
         </form>

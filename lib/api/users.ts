@@ -1,25 +1,29 @@
-import { Question } from "../context";
+import { Question, User } from "../context";
 import { API_URL } from "./constant";
 
 export const getUser = async (username: string) => {
-  const res = await fetch(`${API_URL}/users?username=${username}`, {
+  return await fetch(`${API_URL}/users?username=${username}`, {
     method: "POST",
   })
-
-  return await res.json();
 }
 
-export const getAuthUser = async () => {
+export const getAuthUser = async (): Promise<User> => {
   const res = await fetch(`${API_URL}/me`, {
     method: "GET",
     credentials: "include",
   })
-  return await res.json();
+
+  if(!res.ok){
+    throw new Error("Error while fetching authenticated user")
+  }
+
+  return (await res.json()).data;
 }
+
 
 export const updateUser = async ({
   username, status
-}: {username?: string, status?: string}) => {
+}: {username?: string, status?: string}): Promise<User> => {
   const res = await fetch(`${API_URL}/me`, {
     method: "PATCH",
     credentials: "include",
@@ -28,7 +32,12 @@ export const updateUser = async ({
       status,
     })
   })
-  return await res.json();
+  
+  if(!res.ok){
+    throw new Error("Error while updating user details");
+  }
+
+  return (await res.json()).data;
 }
 
 export const getQuestionsByUser = async ({

@@ -2,7 +2,7 @@
 
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
-import { useCallback, useContext } from "react"
+import { useContext } from "react"
 import { AuthContext } from "@/lib/context"
 import { toast } from "sonner"
 import { ThemeToggle } from "./theme-toggle"
@@ -11,6 +11,8 @@ import Link from "next/link"
 import { User } from "lucide-react"
 import { DynaPuff } from "next/font/google";
 import { ToolTipWrapper } from "./tooltip-wrapper"
+import { useMutation } from "@tanstack/react-query"
+import { API_URL } from "@/lib/api/constant"
 
 const dynaPuff = DynaPuff({
     subsets: ["latin"],
@@ -19,21 +21,30 @@ const dynaPuff = DynaPuff({
 
 export default function Navbar() {
     const router = useRouter()
-    const {user, logout} = useContext(AuthContext)
+    const {user, setUser} = useContext(AuthContext)
 
-    const handleLogin = useCallback(async () => {
-        router.push(`/api/auth/login?redirectUrl=${window.location.href}`)
-     }, [router])
+    const loginMutation = useMutation({
+        mutationFn: async () => {
+            router.push(`/api/auth/login?redirectUrl=${window.location.href}`)
+        },
+    })
 
-
-     const handleLogout = useCallback(async () => {
-        const ok = await logout()
-        if(ok) {
-          toast.success("Logged out successfully")
-          router.push("/")
+    const logoutMutation = useMutation({
+        mutationFn: async () => {
+            return await fetch(`${API_URL}/auth/logout`, {
+                method: "POST",
+            })
+        },
+        onSuccess(data) {
+            if(data.ok){
+                setUser(undefined)
+                toast.success("Logged out successfully")
+            }
+        },
+        onError(){
+            toast.error("Failed to logout")
         }
-        else toast.error("Failed to logout")
-     }, [logout, router])
+    })
 
     return (
         <div className="px-6 py-4 flex justify-center items-center">
@@ -58,11 +69,11 @@ export default function Navbar() {
                                 </Link>
                             </ToolTipWrapper>
                             <ToolTipWrapper content={"Logout"}>
-                                <ExitIcon onClick={handleLogout}/>
+                                <ExitIcon onClick={()=>logoutMutation.mutateAsync()}/>
                             </ToolTipWrapper>
                         </div>
                     ) : (
-                        <Button className="rounded-full" onClick={handleLogin}>Login</Button> 
+                        <Button className="rounded-full" onClick={()=>loginMutation.mutate()}>Login</Button> 
                     )}
                 </div>
             </div>

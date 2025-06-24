@@ -26,12 +26,10 @@ export type Question = Prisma.QuestionGetPayload<{
 
 export type AuthContextType = {
     user: User | undefined
-    isLoading: boolean
-    logout: () => Promise<boolean>
+    setUser: (user: User | undefined)=>void
 }
 
 export const AuthContext = createContext<AuthContextType>({
     user: undefined,
-    isLoading: true,
-    logout: async () => false,
+    setUser: ()=>{}
 })

@@ -5,23 +5,27 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { createQuestion } from "@/lib/api/questions";
 import { AuthContext } from "@/lib/context";
+import { useMutation } from "@tanstack/react-query";
 
 const MAX_MESSAGE_LENGTH = 200;
 
 export default function AskQuestion({username}: {username: string}) {
     const [message, setMessage] = useState("");
     const [validMessage, setValidMessage] = useState(false);
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
-    const handleSend = useCallback(async () => {
-        const res = await createQuestion({data: message, username, createdBy: user?.id});
-        if(!res.error){
-            setMessage("");
-            toast.success(res.message);
-        }else{
-            toast.error(res.message);
+    const createQuestionMutation = useMutation({
+        mutationFn: () => createQuestion({data: message, username, createdBy: user?.id}),
+        onSuccess(data) {
+            if(data){
+                setMessage("");
+                toast.success("Sent your question");
+            }
+        },
+        onError(){
+            toast.error("Failed to send your question")
         }
-    }, [message, user?.id, username]);
+    })
     
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newMessage = e.target.value;
@@ -40,7 +44,7 @@ export default function AskQuestion({username}: {username: string}) {
     }, []);
 
     useEffect(() => {
-        if(message.length > 15){
+        if(message.length > 3){
             setValidMessage(true);
         }else{
             setValidMessage(false);
@@ -51,7 +55,7 @@ export default function AskQuestion({username}: {username: string}) {
             <textarea onPaste={handlePaste} placeholder="Type your question here..." className="min-h-[150px] max-h-[150px] w-full text-wrap scrollbar-hide overflow-auto p-2 border-1 rounded-md" value={message} onChange={handleInputChange}/>
             <div className="text-sm flex justify-between">
                 <span>{message.length}/{MAX_MESSAGE_LENGTH}</span>
-                <Button disabled={!validMessage} onClick={handleSend} className="w-20">Send</Button>
+                <Button disabled={!validMessage} onClick={()=>createQuestionMutation.mutateAsync()} className="w-20">Send</Button>
             </div>
         </div>
     )

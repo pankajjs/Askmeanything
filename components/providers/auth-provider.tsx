@@ -1,45 +1,25 @@
 "use client"
 
-import { API_URL } from "@/lib/api/constant";
 import { getAuthUser } from "@/lib/api/users";
 import { AuthContext, User } from "@/lib/context";
-import React, { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 
 export const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [user, setUser] = useState<User | undefined>(undefined)
-    const [isLoading, setIsLoading] = useState(true)
-    
-    const fetchAuthUser = useCallback(async () => {
-        const res = await getAuthUser()
-        if(!res.error){
-            setUser(res.data)
-            setIsLoading(false)
-        }else{
-            setIsLoading(false)
-        }
-    }, [])
-    
-    const logout = useCallback(async () => {
-        try{
-            const res = await fetch(`${API_URL}/auth/logout`, {
-                method: "POST",
-            })
-            if (res.ok){
-                setUser(undefined)
-                return true;
-            }
-        }catch(error){
-            console.error(error)
-        }
-        return false;
-    }, [])
-
-
+    const { data, isSuccess } = useQuery({
+        queryKey: ["auth-user"],
+        queryFn: getAuthUser,
+        retry(failureCount) {
+            return failureCount < 1;
+        },
+    })
 
     useEffect(()=>{
-        fetchAuthUser()
-    }, [fetchAuthUser])
-
-
-    return <AuthContext.Provider value={{user, isLoading, logout}}>{children}</AuthContext.Provider>
+        if(isSuccess){
+            setUser(data)
+        }
+    }, [isSuccess])
+    
+    return <AuthContext.Provider value={{user, setUser}}>{children}</AuthContext.Provider>
 }

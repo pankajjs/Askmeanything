@@ -1,12 +1,17 @@
+import { Question } from "../context";
 import { API_URL } from "./constant";
 
-export const createQuestion = async ({data, username, createdBy}: {data: string, username: string, createdBy?: string}) => {
+export const createQuestion = async ({data, username, createdBy}: {data: string, username: string, createdBy?: string}): Promise<Question> => {
     const res = await fetch(`${API_URL}/questions`, {
         method: "POST",
         body: JSON.stringify({data, username, createdBy}),
     })
 
-   return await res.json();
+    if(!res.ok){
+        throw new Error("Error while creating question")
+    }
+
+   return (await res.json()).data;
 }
 
 export const deleteQuestion = async(id: string) => {

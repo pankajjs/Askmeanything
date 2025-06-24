@@ -7,12 +7,8 @@ import { useContext } from "react";
 
 export default function Page() {
   const {username} = useParams()
-  const { user, isLoading } = useContext(AuthContext);
-
-  if(isLoading){
-    return <div>Loading...</div>
-  }
-
+  const { user } = useContext(AuthContext);
+  
   if(!user || user?.username != username){
     return <div>You are unauthorized to access this page</div>
   }
