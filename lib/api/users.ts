@@ -1,4 +1,4 @@
-import { Question, User } from "../context";
+import { Question, User } from "../types";
 import { API_URL } from "./constant";
 
 export const getUser = async (username: string) => {

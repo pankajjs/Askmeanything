@@ -1,4 +1,4 @@
-import { Question } from "../context";
+import { Question } from "../types";
 import { API_URL } from "./constant";
 
 export const createQuestion = async ({data, username, createdBy}: {data: string, username: string, createdBy?: string}): Promise<Question> => {

@@ -1,5 +1,4 @@
-import { createContext } from "react";
-import { Prisma } from "./prisma";
+import { Prisma } from "../config/prisma";
 
 export type User = Prisma.UserGetPayload<{
     select: {
@@ -23,13 +22,3 @@ export type Question = Prisma.QuestionGetPayload<{
         userId: true;
     }
 }>
-
-export type AuthContextType = {
-    user: User | undefined
-    setUser: (user: User | undefined)=>void
-}
-
-export const AuthContext = createContext<AuthContextType>({
-    user: undefined,
-    setUser: ()=>{}
-})

@@ -1,7 +1,7 @@
 import AskQuestion from "@/components/ask-question";
 import { UpdateDetails } from "@/components/update-details";
 import { getUser } from "@/lib/api/users";
-import { User } from "@/lib/context";
+import { User } from "@/lib/types";
 import { notFound } from "next/navigation";
 
 export default async function Page({params}: {params: Promise<{username: string}>}) {

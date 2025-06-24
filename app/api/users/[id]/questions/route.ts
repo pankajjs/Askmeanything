@@ -1,7 +1,7 @@
 import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
-import { User } from "@/lib/context";
-import { prisma } from "@/lib/prisma";
-import { withAuthentication } from "@/lib/with-auth";
+import { User } from "@/lib/types";
+import { prisma } from "@/lib/config/prisma";
+import { withAuthentication } from "@/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getQuestionsByUser(req: NextRequest, userData: User) {

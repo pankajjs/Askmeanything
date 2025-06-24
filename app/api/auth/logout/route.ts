@@ -1,5 +1,5 @@
 import { handleError } from "@/lib/errors";
-import { config } from "@/lib/config";
+import { config } from "@/lib/config/config";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 

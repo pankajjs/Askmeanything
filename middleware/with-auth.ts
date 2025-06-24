@@ -1,12 +1,12 @@
 
 import { NextRequest } from 'next/server';
-import { decodeToken, generateToken, verifyToken } from './jwt';
-import { prisma } from './prisma';
+import { decodeToken, generateToken, verifyToken } from '../lib/jwt';
+import { prisma } from '../lib/config/prisma';
 import { TokenExpiredError } from 'jsonwebtoken';
-import { config } from './config';
+import { config } from '../lib/config/config';
 import { cookies } from 'next/headers';
-import { User } from './context';
-import { handleError, UnauthorizedError } from './errors';
+import { User } from '../lib/types';
+import { handleError, UnauthorizedError } from '../lib/errors';
  
 type Handler = (req: NextRequest, userData: User) => Promise<Response>;
  
@@ -14,7 +14,7 @@ export function withAuthentication(handler: Handler) {
   return async (req: NextRequest) => {
     try{
         const token = req.cookies.get(config.userToken.cookieName)?.value;
-        
+
         if (!token) {
             return handleError(new UnauthorizedError())
         }

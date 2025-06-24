@@ -5,7 +5,7 @@ import { deleteQuestion } from "@/lib/api/questions"
 import { formatDistanceToNow } from "date-fns"
 import { toast } from "sonner"
 import { ChatBubbleIcon } from "@radix-ui/react-icons"
-import { Question } from "@/lib/context"
+import { Question } from "@/lib/types"
 import { useMutation } from "@tanstack/react-query"
 
 export const Questions = ({questions}: {questions: Question[]}) => {

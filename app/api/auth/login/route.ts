@@ -1,5 +1,5 @@
 import { handleError } from "@/lib/errors";
-import { oauth2Client } from "@/lib/auth-client";
+import { oauth2Client } from "@/lib/config/auth-client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

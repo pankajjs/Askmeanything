@@ -2,7 +2,7 @@
 
 import { Button } from "./ui/button"
 import { useContext, useState } from "react"
-import { AuthContext, User } from "@/lib/context"
+import { AuthContext } from "@/lib/context"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
@@ -10,6 +10,7 @@ import { updateUser } from "@/lib/api/users"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
+import { User } from "@/lib/types"
 
 
 export const UpdateDetails = ({user}:{user: User}) => {

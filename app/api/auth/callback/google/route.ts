@@ -1,9 +1,9 @@
-import { oauth2Client } from "@/lib/auth-client";
-import { Prisma, prisma } from "@/lib/prisma";
+import { oauth2Client } from "@/lib/config/auth-client";
+import { Prisma, prisma } from "@/lib/config/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { generateToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
-import { config } from "@/lib/config";
+import { config } from "@/lib/config/config";
 
 export async function GET(req: NextRequest) {
     try{
