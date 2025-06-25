@@ -29,7 +29,7 @@ export function Dashboard() {
               <SelectItem value="Reply">Reply</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={selected} onValueChange={setSelected}>
+          {contentType == "Question" && <Select value={selected} onValueChange={setSelected}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -37,11 +37,11 @@ export function Dashboard() {
               <SelectItem value="false">Not answered</SelectItem>
               <SelectItem value="true">Answered</SelectItem>
             </SelectContent>
-          </Select>
+          </Select>}
       </div>
       <div className="flex flex-col py-4 items-center">
-      {contentType == "Question" && <Questions filter={selected}/>}
-      {contentType == "Reply" && <Replies/>}
+        {contentType == "Question" && <Questions filter={selected}/>}
+        {contentType == "Reply" && <Replies/>}
     </div>
   </div>
 }
