@@ -1,4 +1,4 @@
-import { BadRequestError, ForbiddenError, handleError, NotFoundError } from "@/lib/errors";
+import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
 import { User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/middleware/with-auth";
@@ -16,22 +16,7 @@ async function GetReplies(req: NextRequest, userData: User) {
             return handleError(new ForbiddenError())
         }
 
-        const page = Number(req.nextUrl.searchParams.get("page")) || 1;
-        const limit = Number(req.nextUrl.searchParams.get("limit")) || 10;
-        const currentDate = Date.now()
-        const date = Number(req.nextUrl.searchParams.get("date") || currentDate);
-
-        if(isNaN(date)){
-            return handleError(new BadRequestError("Invalid date format"))
-        }
-
-        if(date > Date.now()){
-            return handleError(new BadRequestError("Date can't be in the future"))
-        }
-
-        if(date < (userData.createdAt - 24 * 60 * 60 * 1000)){
-            return handleError(new NotFoundError("No replies found"))
-        }
+        const date = Date.now()
 
         const replies = await prisma.reply.findMany({
             where: {
@@ -43,8 +28,6 @@ async function GetReplies(req: NextRequest, userData: User) {
                     lte: new Date(date).setHours(23, 59, 59, 999)
                 },
             },
-            skip: (page - 1) * limit,
-            take: Math.min(limit, 100),
             orderBy: {
                 createdAt: "desc"
             },
@@ -68,6 +51,8 @@ async function GetReplies(req: NextRequest, userData: User) {
                 }
             },
         })
+
+        console.log(replies)
 
         return NextResponse.json({message: "Replies fetched successfully", data: replies}, {status: 200})
     }catch(error){

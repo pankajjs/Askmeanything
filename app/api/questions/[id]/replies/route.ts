@@ -36,7 +36,7 @@ async function CreateReplies(req: NextRequest, _userData: User) {
             return handleError(new ConflictError("Question already answered"));
         }
 
-        const [_, createdReply] = await prisma.$transaction([
+        const [_, reply] = await prisma.$transaction([
             prisma.question.update({
                 where: {
                     id: questionId
@@ -46,21 +46,29 @@ async function CreateReplies(req: NextRequest, _userData: User) {
                     updatedAt: Date.now()
                 }
             }),
+
             prisma.reply.create({
                 data: {
                     data: createRepliesDto.data,
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
+                    qId: questionId,
+                },
+                include: {
                     question: {
-                        connect: {
-                            id: questionId,
+                        select: {
+                            user: {
+                                select: {
+                                    username: true,
+                                }
+                            }
                         }
                     }
                 }
             })
-        ])
+        ]);
 
-        return NextResponse.json({message: "Reply created successfully", data: createdReply}, {status: 200})
+        return NextResponse.json({message: "Reply created successfully", data: reply}, {status: 201})
     }catch(error){
         console.error("Error while creating reply", error)
         return handleError();

@@ -41,20 +41,34 @@ export const updateUser = async ({
   return (await res.json()).data;
 }
 
-export const getQuestionsByUser = async ({
+export const getQuestionByUser = async ({
   userId, ans
 }:{ 
   userId: string,
   ans: string,
 }):Promise<Question[]> => {
-    const res = await fetch(`${API_URL}/users/${userId}/questions?answered=${ans}`, {
-      method: "GET",
-      credentials: "include",
-    })
-    
-    if(!res.ok){
-      throw new Error("Error while fetching questions")
-    }
+  
+  const res = await fetch(`${API_URL}/users/${userId}/questions?answered=${ans}`, {
+    method: "GET",
+    credentials: "include",
+  })
 
-    return (await res.json()).data;
+  if(!res.ok){
+    throw new Error(`Error while fetching questions`)
+  }
+
+  return (await res.json()).data;
+}
+
+export const getRepliesByUser = async ({userId}:{userId: string})=>{
+  const res = await fetch(`${API_URL}/users/${userId}/replies`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if(!res.ok){
+    throw new Error(`Error while fetching replies`)
+  }
+
+  return (await res.json()).data;
 }

@@ -23,3 +23,22 @@ export type Question = Prisma.QuestionGetPayload<{
         userId: true;
     }
 }>
+
+export type Reply = Prisma.ReplyGetPayload<{
+    select: {
+        createdAt: true,
+        data: true,
+        id: true,
+        qId: true,
+        updatedAt: true,
+        question: {
+            select: {
+                user: {
+                    select: {
+                        username: true,
+                    }
+                }
+            }
+        }
+    },
+}>
