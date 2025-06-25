@@ -21,6 +21,14 @@ async function deleteQuestion(req: NextRequest) {
             return handleError(new NotFoundError("Question not found"));
         }
 
+        await prisma.reply.delete({
+            where: {
+                qId: question.id,
+            }
+        }).catch((reason)=>{
+            console.error("Reply does not exist.");
+        })
+
         await prisma.question.delete({
             where: {id},
         })
