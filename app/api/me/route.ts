@@ -23,11 +23,13 @@ async function getUser(_req: NextRequest, userData: User){
 
 async function updateUser(req: NextRequest, userData: User){
     try{
-        const userDto = await req.json() as {username?: string, status?: string};
+        const userDto = await req.json() as {username?: string, status?: string, active?: boolean};
         
-        if(!userDto.username && !userDto.status){
+        if(!userDto.username && !userDto.status && userData.active === undefined){
             return handleError(new BadRequestError("Invalid data"));
         }
+
+        console.log(userDto);
         
         const data = await prisma.user.update({
             where: {
@@ -36,6 +38,7 @@ async function updateUser(req: NextRequest, userData: User){
             data: {
                 status: userDto.status ?? userData.status,
                 username: userDto.username ?? userData.username,
+                active: userDto.active ?? false,
                 updatedAt: Date.now(),
             },
         });

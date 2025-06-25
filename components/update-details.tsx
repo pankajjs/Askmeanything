@@ -11,6 +11,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { User } from "@/lib/types"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 
 export const UpdateDetails = ({user}:{user: User}) => {
@@ -19,13 +20,15 @@ export const UpdateDetails = ({user}:{user: User}) => {
     
     const [userDetails, setUserDetails] = useState({
         username: user?.username ?? "",
-        status: user?.status ?? `Ask something interesting to ${user?.username}`
+        status: user?.status ?? `Ask something interesting to ${user?.username}`,
+        active: user.active ? "Yes" : "No"
     })
 
     const updateUserMutation = useMutation({
         mutationFn: () => updateUser({
             username: userDetails.username,
-            status: userDetails.status
+            status: userDetails.status,
+            active: userDetails.active === "Yes",
         }),
         onSuccess(data){
             if(data){
@@ -77,6 +80,25 @@ export const UpdateDetails = ({user}:{user: User}) => {
                             }
                         });
                     }}/>
+                </div>
+                <div className="grid gap-3">
+                    <Label htmlFor="username-1">Are you receiving questions today?</Label>
+                    <Select value={userDetails.active} onValueChange={(v)=>{
+                        setUserDetails((s)=>{
+                            return {
+                                ...s,
+                                active: v,
+                            }
+                        })
+                    }}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Yes">Yes</SelectItem>
+                            <SelectItem value="No">No</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
             <DialogFooter className="flex">

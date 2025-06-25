@@ -9,6 +9,7 @@ export type User = Prisma.UserGetPayload<{
         updatedAt: true,
         roles: true,
         status: true,
+        active: true
     }
 }>
 

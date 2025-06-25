@@ -22,6 +22,7 @@ model User {
   questions Question[]
   roles Json
   status String?
+  active Boolean @default(true)
 }
 model Question {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId

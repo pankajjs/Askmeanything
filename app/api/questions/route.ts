@@ -25,6 +25,10 @@ export async function POST(req: NextRequest) {
             return handleError(new BadRequestError("Question is too long"))
         }
 
+        if(!user.active){
+            return handleError(new BadRequestError("Host is not active today."))
+        }
+
         const question = await prisma.question.create({
             data: {
                 data: data.data,

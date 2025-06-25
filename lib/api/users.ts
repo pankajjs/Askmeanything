@@ -22,14 +22,15 @@ export const getAuthUser = async (): Promise<User> => {
 
 
 export const updateUser = async ({
-  username, status
-}: {username?: string, status?: string}): Promise<User> => {
+  username, status, active
+}: {username?: string, status?: string, active?: boolean}): Promise<User> => {
   const res = await fetch(`${API_URL}/me`, {
     method: "PATCH",
     credentials: "include",
     body: JSON.stringify({
       username,
       status,
+      active
     })
   })
   

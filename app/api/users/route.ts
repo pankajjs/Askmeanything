@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
                 username: user.username,
                 roles: user.roles,
                 status: user.status,
+                active: user.active
             }
         }, {status: 200})
     }catch(error){
