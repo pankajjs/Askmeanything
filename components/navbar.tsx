@@ -53,7 +53,7 @@ export default function Navbar() {
 
     return (
         <div className="px-6 py-4 flex justify-center items-center">
-            <div className="flex justify-between items-center border-[1px] rounded-full p-4 w-full xs:w-[80%] md:w-[70%] lg:w-[50%]">
+            <div className="flex justify-between items-center border-[1px] rounded-full p-3 w-full xs:w-[80%] md:w-[70%] lg:w-[50%]">
                 <div className="">
                     <Link href="/">
                         <span className={`${dynaPuff.className} text-2xl font-bold`}>AMA</span>
