@@ -51,9 +51,7 @@ async function GetReplies(req: NextRequest, userData: User) {
                 }
             },
         })
-
-        console.log(replies)
-
+        
         return NextResponse.json({message: "Replies fetched successfully", data: replies}, {status: 200})
     }catch(error){
         console.error("Error while fetching replies by user", error)

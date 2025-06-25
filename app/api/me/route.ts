@@ -29,8 +29,6 @@ async function updateUser(req: NextRequest, userData: User){
             return handleError(new BadRequestError("Invalid data"));
         }
 
-        console.log(userDto);
-        
         const data = await prisma.user.update({
             where: {
                 id: userData.id,
