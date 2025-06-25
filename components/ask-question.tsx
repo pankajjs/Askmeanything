@@ -22,8 +22,8 @@ export default function AskQuestion({username}: {username: string}) {
                 toast.success("Sent your question");
             }
         },
-        onError(){
-            toast.error("Failed to send your question")
+        onError(error){
+            toast.error(error.message)
         }
     })
     
