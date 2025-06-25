@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 export const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [user, setUser] = useState<User | undefined>(undefined)
-    const { data, isSuccess } = useQuery({
+    const { data, isSuccess, isPending } = useQuery({
         queryKey: ["auth-user"],
         queryFn: getAuthUser,
         retry(failureCount) {
@@ -22,5 +22,5 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
         }
     }, [isSuccess])
     
-    return <AuthContext.Provider value={{user, setUser}}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={{user, setUser, loading: isPending}}>{children}</AuthContext.Provider>
 }
