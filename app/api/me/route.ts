@@ -48,6 +48,12 @@ async function updateUser(req: NextRequest, userData: User){
                 active: userDto.active ?? false,
                 updatedAt: Date.now(),
             },
+            select: {
+                active: true,
+                status: true,
+                username: true,
+                updatedAt: true,
+            }
         });
 
         return NextResponse.json({
