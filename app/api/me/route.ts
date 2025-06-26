@@ -1,4 +1,4 @@
-import { BadRequestError, handleError } from "@/lib/errors";
+import { BadRequestError, ConflictError, handleError } from "@/lib/errors";
 import { User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
@@ -27,6 +27,15 @@ async function updateUser(req: NextRequest, userData: User){
         
         if(!userDto.username && !userDto.status && userData.active === undefined){
             return handleError(new BadRequestError("Invalid data"));
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {username: userDto.username}
+        })
+
+        // If user exists with same name, return conflict response
+        if(user && userData.id !== user.id){
+            return handleError(new ConflictError("Username already exists"));
         }
 
         const data = await prisma.user.update({
