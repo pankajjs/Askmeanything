@@ -1,6 +1,6 @@
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 import { prisma } from "@/lib/config/prisma";
-import { withAuthentication } from "@/middleware/with-auth";
+import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 async function deleteQuestion(req: NextRequest) {

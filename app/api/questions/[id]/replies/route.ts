@@ -1,7 +1,7 @@
 import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
 import { User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
-import { withAuthentication } from "@/middleware/with-auth";
+import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 async function CreateReplies(req: NextRequest, _userData: User) {

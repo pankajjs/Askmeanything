@@ -1,12 +1,12 @@
 
 import { NextRequest } from 'next/server';
-import { decodeToken, generateToken, verifyToken } from '../lib/jwt';
-import { prisma } from '../lib/config/prisma';
+import { decodeToken, generateToken, verifyToken } from '../jwt';
+import { prisma } from '../config/prisma';
 import { TokenExpiredError } from 'jsonwebtoken';
-import { config } from '../lib/config/config';
+import { config } from '../config/config';
 import { cookies } from 'next/headers';
-import { User } from '../lib/types';
-import { handleError, UnauthorizedError } from '../lib/errors';
+import { User } from '../types';
+import { handleError, UnauthorizedError } from '../errors';
  
 type Handler = (req: NextRequest, userData: User) => Promise<Response>;
  
