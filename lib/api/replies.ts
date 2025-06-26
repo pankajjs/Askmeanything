@@ -7,12 +7,14 @@ export const createReply = async ({data, qId}: {data: string, qId: string}): Pro
         body: JSON.stringify({data}),
         credentials: "include",
     })
+    
+    const jsonRes = await res.json();
 
     if(!res.ok){
-        throw new Error("Error while creating reply")
+      throw new Error(jsonRes.message)
     }
-
-    return (await res.json()).data;
+  
+    return jsonRes.data;
 }
 
 export const getRepliesByUser = async ({userId}: {userId: string}): Promise<Reply[]> => {
@@ -21,9 +23,11 @@ export const getRepliesByUser = async ({userId}: {userId: string}): Promise<Repl
         method: "GET",
     })
 
-    if(!res.ok){
-        throw new Error("Error while fetching replies")
-    }
+    const jsonRes = await res.json();
 
-    return (await res.json()).data;
+    if(!res.ok){
+      throw new Error(jsonRes.message)
+    }
+  
+    return jsonRes.data;
 }

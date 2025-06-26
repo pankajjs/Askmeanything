@@ -7,12 +7,12 @@ export const createQuestion = async ({data, username, createdBy}: {data: string,
         body: JSON.stringify({data, username, createdBy}),
     })
     
-    const jsonRes = (await res.json());
+    const jsonRes = await res.json();
 
     if(!res.ok){
-        throw new Error(res.status === 400 ? jsonRes.message: "Failed to send your question");
+      throw new Error(jsonRes.message)
     }
-
+  
     return jsonRes.data;
 }
 
@@ -22,9 +22,11 @@ export const deleteQuestion = async(id: string) => {
         credentials: "include",
     })
     
-    if(!res.ok){
-        throw new Error("Error while deleting question")
-    }
+    const jsonRes = await res.json();
 
-    return await res.json();
+    if(!res.ok){
+      throw new Error(jsonRes.message)
+    }
+  
+    return jsonRes.data;
 }

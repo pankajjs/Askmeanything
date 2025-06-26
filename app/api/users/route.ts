@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({
-            message: "User found",
+            message: "Successfully fetched user",
             data:{
                 username: user.username,
                 roles: user.roles,

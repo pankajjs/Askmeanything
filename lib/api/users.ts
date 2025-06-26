@@ -13,11 +13,13 @@ export const getAuthUser = async (): Promise<User> => {
     credentials: "include",
   })
 
+  const jsonRes = await res.json();
+
   if(!res.ok){
-    throw new Error("Error while fetching authenticated user")
+    throw new Error(jsonRes.message);
   }
 
-  return (await res.json()).data;
+  return jsonRes.data;
 }
 
 
@@ -34,11 +36,13 @@ export const updateUser = async ({
     })
   })
   
+  const jsonRes = await res.json();
+
   if(!res.ok){
-    throw new Error("Error while updating user details");
+    throw new Error(jsonRes.message)
   }
 
-  return (await res.json()).data;
+  return jsonRes.data;
 }
 
 export const getQuestionByUser = async ({
@@ -52,12 +56,14 @@ export const getQuestionByUser = async ({
     method: "GET",
     credentials: "include",
   })
+  
+  const jsonRes = await res.json();
 
   if(!res.ok){
-    throw new Error(`Error while fetching questions`)
+    throw new Error(jsonRes.message)
   }
 
-  return (await res.json()).data;
+  return jsonRes.data;
 }
 
 export const getRepliesByUser = async ({userId}:{userId: string})=>{
@@ -66,9 +72,11 @@ export const getRepliesByUser = async ({userId}:{userId: string})=>{
     credentials: "include",
   });
 
+  const jsonRes = await res.json();
+
   if(!res.ok){
-    throw new Error(`Error while fetching replies`)
+    throw new Error(jsonRes.message)
   }
 
-  return (await res.json()).data;
+  return jsonRes.data;
 }
