@@ -1,5 +1,5 @@
 import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
-import { User } from "@/lib/types";
+import { createSuccessResponse, User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -68,7 +68,7 @@ async function CreateReplies(req: NextRequest, _userData: User) {
             })
         ]);
 
-        return NextResponse.json({message: "Reply created successfully", data: reply}, {status: 201})
+        return NextResponse.json(createSuccessResponse("Reply created successfully", reply), {status: 201})
     }catch(error){
         console.error("Error while creating reply", error)
         return handleError();

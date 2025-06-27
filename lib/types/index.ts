@@ -42,3 +42,11 @@ export type Reply = Prisma.ReplyGetPayload<{
         }
     },
 }>
+
+export const createSuccessResponse = (message: string, data?: any) => {
+    return {
+        success: true,
+        message,
+        data,
+    }
+}
