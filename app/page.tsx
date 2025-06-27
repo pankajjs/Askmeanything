@@ -20,7 +20,7 @@ export default function Home() {
           Ask questions anonymously and get honest answers. Join the conversation, connect, and discover new perspectives.
         </p>
         <Link href={user ? `/${user.username}` : `/api/auth/login`}>
-          <Button className="rounded-full px-8 py-4 text-lg">Get Started</Button>
+          <Button className="rounded-full p-5 text-lg">Get Started</Button>
         </Link>
       </div>
     </div>
