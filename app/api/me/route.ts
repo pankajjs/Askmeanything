@@ -1,4 +1,4 @@
-import { BadRequestError, ConflictError, handleError } from "@/lib/errors";
+import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
 import { createSuccessResponse, User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
@@ -11,6 +11,11 @@ async function getUser(_req: NextRequest, userData: User){
                 id: userData.id,
             },
         })
+
+        if(!user){
+            return handleError(new NotFoundError("User not found"))
+        }
+        
         return NextResponse.json(createSuccessResponse(
             "User fetched successfully",
             user

@@ -20,7 +20,7 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
         if(isSuccess){
             setUser(data)
         }
-    }, [isSuccess])
+    }, [data, isSuccess])
     
     return <AuthContext.Provider value={{user, setUser, loading: isPending}}>{children}</AuthContext.Provider>
 }
