@@ -15,7 +15,7 @@ export const getAuthUser = async (): Promise<User> => {
 
   const jsonRes = await res.json();
 
-  if(!res.ok){
+  if(!jsonRes.success){
     throw new Error(jsonRes.message);
   }
 
@@ -38,7 +38,7 @@ export const updateUser = async ({
   
   const jsonRes = await res.json();
 
-  if(!res.ok){
+  if(!jsonRes.success){
     throw new Error(jsonRes.message)
   }
 
@@ -59,7 +59,7 @@ export const getQuestionByUser = async ({
   
   const jsonRes = await res.json();
 
-  if(!res.ok){
+  if(!jsonRes.success){
     throw new Error(jsonRes.message)
   }
 
@@ -74,7 +74,7 @@ export const getRepliesByUser = async ({userId}:{userId: string})=>{
 
   const jsonRes = await res.json();
 
-  if(!res.ok){
+  if(!jsonRes.success){
     throw new Error(jsonRes.message)
   }
 
