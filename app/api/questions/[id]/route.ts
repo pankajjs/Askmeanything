@@ -2,6 +2,7 @@ import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { createSuccessResponse } from "@/lib/types";
 
 async function deleteQuestion(req: NextRequest) {
     try{
@@ -33,9 +34,9 @@ async function deleteQuestion(req: NextRequest) {
             where: {id},
         })
 
-        return NextResponse.json({
-            message: "Successfully deleted a question",
-        }, {status: 200});
+        return NextResponse.json(createSuccessResponse(
+            "Successfully deleted a question")
+        ,{status: 200});
     }catch(error){
         console.error("Error while deleting question", error)
         return handleError();

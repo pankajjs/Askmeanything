@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/prisma"
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
+import { createSuccessResponse } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
     try{
@@ -47,10 +48,10 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        return NextResponse.json({
-            message: "Question sent successfully",
-            data: question
-        }, {status: 200})
+        return NextResponse.json(createSuccessResponse(
+            "Question sent successfully",
+            question
+        ), {status: 200})
     }catch(error){
         console.error("Error while creating question", error)
         return handleError();

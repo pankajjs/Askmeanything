@@ -1,6 +1,7 @@
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 import { prisma } from "@/lib/config/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { createSuccessResponse } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
     try{
@@ -20,15 +21,13 @@ export async function POST(req: NextRequest) {
             return handleError(new NotFoundError("User not found"))
         }
 
-        return NextResponse.json({
-            message: "Successfully fetched user",
-            data:{
-                username: user.username,
-                roles: user.roles,
-                status: user.status,
-                active: user.active
-            }
-        }, {status: 200})
+
+        return NextResponse.json(createSuccessResponse("Successfully fetched user", {
+            username: user.username,
+            roles: user.roles,
+            status: user.status,
+            active: user.active,
+        }), {status: 200})
     }catch(error){
         console.error("Error while fetching user", error)
         return handleError();

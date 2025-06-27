@@ -1,5 +1,5 @@
 import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
-import { User } from "@/lib/types";
+import { createSuccessResponse, User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -52,7 +52,7 @@ async function GetReplies(req: NextRequest, userData: User) {
             },
         })
         
-        return NextResponse.json({message: "Replies fetched successfully", data: replies}, {status: 200})
+        return NextResponse.json(createSuccessResponse("Replies fetched successfully", replies), {status: 200})
     }catch(error){
         console.error("Error while fetching replies by user", error)
         return handleError()

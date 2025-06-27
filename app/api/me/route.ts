@@ -1,5 +1,5 @@
 import { BadRequestError, ConflictError, handleError } from "@/lib/errors";
-import { User } from "@/lib/types";
+import { createSuccessResponse, User } from "@/lib/types";
 import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,10 +11,10 @@ async function getUser(_req: NextRequest, userData: User){
                 id: userData.id,
             },
         })
-        return NextResponse.json({
-            message: "User fetched successfully",
-            data: user
-        })
+        return NextResponse.json(createSuccessResponse(
+            "User fetched successfully",
+            user
+        ), {status: 200})
     }catch(error){
         console.error("Error while fetching user", error)
         return handleError();
@@ -56,10 +56,10 @@ async function updateUser(req: NextRequest, userData: User){
             }
         });
 
-        return NextResponse.json({
-            message: "Successfully updated user details",
-            data,
-        })
+        return NextResponse.json(createSuccessResponse(
+            "Successfully updated user details",
+            data
+        ), {status: 200})
     }catch(error){
         console.error("Error while updating username or status", error)
         return handleError();
