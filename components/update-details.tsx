@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 
 
 export const UpdateDetails = ({user}:{user: User}) => {
-    const {user: authUser} = useContext(AuthContext);
+    const {user: authUser, setUser} = useContext(AuthContext);
     const router = useRouter();
     
     const [userDetails, setUserDetails] = useState({
@@ -32,6 +32,13 @@ export const UpdateDetails = ({user}:{user: User}) => {
         }),
         onSuccess(data){
             if(data){
+                setUser({
+                    ...authUser!,
+                    username: data.username,
+                    active: data.active,
+                    updatedAt: data.updatedAt,
+                    status: data.status,
+                })
                 toast.success("Update your details");
                 router.push(`/${data.username}`)
             }
