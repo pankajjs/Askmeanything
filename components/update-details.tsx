@@ -20,7 +20,7 @@ export const UpdateDetails = ({user}:{user: User}) => {
     
     const [userDetails, setUserDetails] = useState({
         username: user?.username ?? "",
-        status: user?.status ?? `Ask something interesting to ${user?.username}`,
+        status: user?.status ?? `Ask something interesting huh:)`,
         active: user.active ? "Yes" : "No"
     })
 
