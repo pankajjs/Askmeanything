@@ -1,17 +1,15 @@
 import { Prisma } from "../config/prisma";
 
-export type User = Prisma.UserGetPayload<{
-    select: {
-        id: true,
-        email: true,
-        username: true,
-        createdAt: true,
-        updatedAt: true,
-        roles: true,
-        status: true,
-        active: true
-    }
-}>
+export type User = {
+    id: string,
+    email: string,
+    username: string,
+    createdAt: number,
+    updatedAt: number,
+    roles: JSON,
+    status: string,
+    active: boolean
+}
 
 export type Question = Prisma.QuestionGetPayload<{
     select: {
