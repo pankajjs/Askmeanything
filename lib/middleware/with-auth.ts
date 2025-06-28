@@ -1,12 +1,12 @@
 
 import { NextRequest } from 'next/server';
 import { decodeToken, generateToken, verifyToken } from '../jwt';
-import { prisma } from '../config/prisma';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { config } from '../config/config';
 import { cookies } from 'next/headers';
 import { User } from '../types';
 import { handleError, UnauthorizedError } from '../errors';
+import { findUserById } from '../dao/users';
  
 type Handler = (req: NextRequest, userData: User) => Promise<Response>;
  
@@ -20,17 +20,8 @@ export function withAuthentication(handler: Handler) {
         }
 
         const { id } = verifyToken(token) as {id: string};
-        
-        const user = await prisma.user.findUnique({
-            where: {
-                id
-            },
-        })
-
-        if(!user){
-            return handleError(new UnauthorizedError())
-        }
-
+        const user = await findUserById(id);
+        console.log("with-authentication", user, id)
         return handler(req, user);
     }catch(error){
         console.error("Error while checking authentication", error)
@@ -51,16 +42,7 @@ export function withAuthentication(handler: Handler) {
                 maxAge: config.userToken.ttl
             })
             
-            const user = await prisma.user.findUnique({
-                where: {
-                    id
-                },
-            })
-
-            if(!user){
-                return handleError(new UnauthorizedError());
-            }
-
+            const user = await findUserById(id);
             return handler(req, user);
         }else{
             return handleError(new UnauthorizedError());
