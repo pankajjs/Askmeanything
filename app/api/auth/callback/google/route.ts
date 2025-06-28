@@ -1,9 +1,9 @@
 import { oauth2Client } from "@/lib/config/auth-client";
-import { Prisma, prisma } from "@/lib/config/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { generateToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 import { config } from "@/lib/config/config";
+import { createUser, findUserByEmail } from "@/lib/dao/users";
 
 export async function GET(req: NextRequest) {
     try{
@@ -31,28 +31,14 @@ export async function GET(req: NextRequest) {
             console.error("Email not verified");
             return NextResponse.redirect(new URL("/", req.url))
         }
-
-        let user = await prisma.user.findUnique({
-            where: {
-                email: tokenInfo.email
-            }
-        });
-
+        
+        let user = await findUserByEmail(tokenInfo.email);
+        console.log(user)
         if(!user){
-            user = await prisma.user.create({
-                data: {
-                    email: tokenInfo.email,
-                    username: tokenInfo.email.split("@")[0],
-                    roles: {
-                        "admin": false,
-                        "user": true,
-                    } as Prisma.JsonObject,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                }
-            })
+            user = await createUser(tokenInfo.email);
         }
-
+        
+        console.log(user)
         const accessToken = generateToken({
             id: user.id,
         })
