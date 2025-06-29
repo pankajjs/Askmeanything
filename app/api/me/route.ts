@@ -1,4 +1,4 @@
-import { BadRequestError, ConflictError, handleError } from "@/lib/errors";
+import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
 import { createSuccessResponse, User } from "@/lib/types";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,6 +7,10 @@ import { findUserById, findUserByUserName, updateUserById } from "@/lib/dao/user
 async function getUser(_req: NextRequest, userData: User){
     try{
         const user = await findUserById(userData.id);
+
+        if(!user){
+            throw new NotFoundError("User not found");
+        }
 
         return NextResponse.json(createSuccessResponse(
             "User fetched successfully",
