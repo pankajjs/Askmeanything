@@ -1,59 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/config/prisma"
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
-import { createSuccessResponse } from "@/lib/types";
+import { CreateQuestionDto, createSuccessResponse } from "@/lib/types";
+import { findUserByUserName } from "@/lib/dao/users";
+import { createQuestion } from "@/lib/api/questions";
 
 export async function POST(req: NextRequest) {
     try{
-        const data = await req.json() as {data: string, username: string, createdBy?: string};
-
-
-       const user = await prisma.user.findFirst({
-            where: {
-                username: data.username
-            }
-        })
-
+        const data = await req.json() as CreateQuestionDto;
+        const user = await findUserByUserName(data.username);
+        
         if(!user){
-            return handleError(new NotFoundError("User not found"));
+            throw new NotFoundError("User not found");
         }
 
         if(user.id === data.createdBy){
-            return handleError(new BadRequestError("You need therapy"))
+            throw new BadRequestError("You need therapy");
         }
 
         if(data.data.length > 200){
-            return handleError(new BadRequestError("Question is too long"))
+            throw new BadRequestError("Question is too long");
         }
 
         if(!user.active){
-            return handleError(new BadRequestError("Host is not active today."))
+            throw new BadRequestError("Host is not active today.");
         }
 
-        const question = await prisma.question.create({
-            data: {
-                data: data.data,
-                createdBy: data.createdBy,
-                user: {
-                    connect: {
-                       id: user.id
-                    }
-                },
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-            },
-            omit: {
-                userId: true,
-                createdBy: true,
-            }
+        const question = await createQuestion({
+            data: data.data,
+            username: data.username,
+            createdBy: data.createdBy,
         })
 
         return NextResponse.json(createSuccessResponse(
             "Question sent successfully",
             question
-        ), {status: 200})
+        ), {status: 201})
     }catch(error){
-        console.error("Error while creating question", error)
-        return handleError();
+        console.error(error);
+        return handleError(error as unknown as Error);
     }
 }
