@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
             data: data.data,
             userId: user.id,
             createdBy: data.createdBy ?? "anon-user",
+            username: user.username,
         })
 
         return NextResponse.json(createSuccessResponse(
