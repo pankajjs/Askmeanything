@@ -1,5 +1,4 @@
 import { db } from "../config/firestore"
-import { NotFoundError } from "../errors";
 import { User } from "../types";
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
@@ -7,15 +6,16 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
         const users =  await db.collection("users").where("email", '==', email).get();
         
         if(users.empty){
-            throw new NotFoundError("User not found");
+            return null;
         }
+
         return {
             id: users.docs[0].id,
             ...users.docs[0].data()
         } as unknown as User;
     }catch(error){
         console.error("Error while fetching user by email", error)
-        return null;
+        throw error;
     }
 }
 
@@ -45,13 +45,12 @@ export const createUser = async(email: string): Promise<User> => {
     }
 }
 
-export const findUserById = async (id: string): Promise<User> => {
+export const findUserById = async (id: string): Promise<User | null> => {
     try{
         const user = await db.collection("users").doc(id).get();
         
         if(!user.exists){
-            console.log("users.empty");
-            throw new NotFoundError(`User not found`);
+            return null;
         }
 
         return {
@@ -84,10 +83,12 @@ export const findUserByUserName = async(username: string): Promise<User | null> 
 
 export const updateUserById = async (id: string, userDto: Partial<User>) => {
     try{
+        userDto = {...userDto, updatedAt: Date.now()}
+
         await db.collection("users").doc(id).update({
             ...userDto,
-            updatedAt: Date.now(),
         })
+
         return {
             ...userDto,
         }
