@@ -33,12 +33,11 @@ export async function GET(req: NextRequest) {
         }
         
         let user = await findUserByEmail(tokenInfo.email);
-        console.log(user)
+
         if(!user){
             user = await createUser(tokenInfo.email);
         }
         
-        console.log(user)
         const accessToken = generateToken({
             id: user.id,
         })
