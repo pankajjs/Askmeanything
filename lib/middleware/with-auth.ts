@@ -16,12 +16,16 @@ export function withAuthentication(handler: Handler) {
         const token = req.cookies.get(config.userToken.cookieName)?.value;
 
         if (!token) {
-            return handleError(new UnauthorizedError())
+            throw new UnauthorizedError();
         }
 
         const { id } = verifyToken(token) as {id: string};
         const user = await findUserById(id);
-        console.log("with-authentication", user, id)
+        
+        if(!user){
+            throw new UnauthorizedError();
+        }
+
         return handler(req, user);
     }catch(error){
         console.error("Error while checking authentication", error)
@@ -43,6 +47,11 @@ export function withAuthentication(handler: Handler) {
             })
             
             const user = await findUserById(id);
+            
+            if(!user){
+                return handleError(new UnauthorizedError());
+            }
+
             return handler(req, user);
         }else{
             return handleError(new UnauthorizedError());
