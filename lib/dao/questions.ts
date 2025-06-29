@@ -6,9 +6,27 @@ export type CreateQuestionDto = {
     data: string,
     userId: string,
     createdBy: string,
+    username: string,
 }
 
-export const createQuestion = async ({data, userId, createdBy}: CreateQuestionDto): Promise<Question> => {
+export const updateQuestionById = async (id: string, questionDto: Partial<Question>) => {
+    try{
+        questionDto = {...questionDto, updatedAt: Date.now()}
+
+        await db.collection("questions").doc(id).update({
+            ...questionDto,
+        })
+
+        return {
+            ...questionDto,
+        }
+    }catch(error){
+        console.error(`Error while updating question by id:${id}`, error);
+        throw error;
+    }
+}
+
+export const createQuestion = async ({data, userId, createdBy, username}: CreateQuestionDto): Promise<Question> => {
     try{
         const questionDoc = await db.collection("questions").add({
             data,
@@ -17,6 +35,7 @@ export const createQuestion = async ({data, userId, createdBy}: CreateQuestionDt
             createdAt: Date.now(),
             updatedAt: Date.now(),
             answered: false,
+            username,
         });
         
         const question = (await questionDoc.get()).data() as unknown as Question;
@@ -27,7 +46,8 @@ export const createQuestion = async ({data, userId, createdBy}: CreateQuestionDt
             answered: question.answered,
             updatedAt: question.updatedAt,
             createdAt: question.createdAt,
-            userId: question.userId
+            userId: question.userId,
+            username: question.username
         }
     }catch(error){
         console.error("Error while creating question", error);
@@ -91,6 +111,7 @@ export const findQuestionsByUserId = async ({id, createdAt, answered}: Prop) => 
                 data: q.data().data,
                 updatedAt: q.data().updatedAt,
                 userId: q.data().userId,
+                username: q.data().username,
             })
         })
 
