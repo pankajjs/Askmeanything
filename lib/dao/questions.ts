@@ -1,26 +1,33 @@
+import { Filter } from "firebase-admin/firestore";
 import { db } from "../config/firestore";
-import { CreateQuestionDto, Question } from "../types";
+import { Question } from "../types";
 
-export const createQuestion = async (questionDto: CreateQuestionDto): Promise<Question> => {
+export type CreateQuestionDto = {
+    data: string,
+    userId: string,
+    createdBy: string,
+}
+
+export const createQuestion = async ({data, userId, createdBy}: CreateQuestionDto): Promise<Question> => {
     try{
-        const question = await db.collection("questions").add({
-          data: questionDto.data,
-          username: questionDto.username,
-          createdBy: questionDto.createdBy,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          answered: false,
+        const questionDoc = await db.collection("questions").add({
+            data,
+            userId,
+            createdBy,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            answered: false,
         });
         
-        const data = (await question.get()).data as unknown as Question;
+        const question = (await questionDoc.get()).data() as unknown as Question;
 
         return {
-            id: question.id,
-            data: data.data,
-            answered: data.answered,
-            updatedAt: data.updatedAt,
-            createdAt: data.createdAt,
-            userId: data.userId
+            id: questionDoc.id,
+            data: question.data,
+            answered: question.answered,
+            updatedAt: question.updatedAt,
+            createdAt: question.createdAt,
+            userId: question.userId
         }
     }catch(error){
         console.error("Error while creating question", error);
@@ -51,6 +58,45 @@ export const deleteQuestionById = async (id: string) => {
         await db.collection("questions").doc(id).delete();
     }catch(error){
         console.error(`Error while deleting question by id:${id}`, error);
+        throw error;
+    }
+}
+
+export type Prop = {
+    id: string,
+    answered?: boolean
+    createdAt: number
+}
+
+export const findQuestionsByUserId = async ({id, createdAt, answered}: Prop) => {
+    try{
+        const questionsDoc = await db.collection("questions")
+                            .where(
+                                Filter.and(
+                                    Filter.where("userId", "==", id),
+                                    Filter.where("createdAt", ">=", new Date(createdAt).setHours(0, 0, 0, 0)),
+                                    Filter.where("createdAt", "<=", new Date(createdAt).setHours(23, 59, 59, 999)),
+                                    Filter.where("answered", "==", answered)
+                                )
+                            )
+                            .orderBy("createdAt", "desc")
+                            .get();
+        
+        const questions:Question[] = []
+        questionsDoc.forEach((q)=>{
+            questions.push({
+                id: q.id,
+                answered: q.data().answered,
+                createdAt: q.data().createdAt,
+                data: q.data().data,
+                updatedAt: q.data().updatedAt,
+                userId: q.data().userId,
+            })
+        })
+
+        return questions;
+    }catch(error){
+        console.error(`Error while fetching questions by userId:${id}`, error);
         throw error;
     }
 }
