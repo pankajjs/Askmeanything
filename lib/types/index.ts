@@ -1,5 +1,3 @@
-import { Prisma } from "../config/prisma";
-
 export type User = {
     id: string,
     email: string,
@@ -11,35 +9,24 @@ export type User = {
     active: boolean
 }
 
-export type Question = Prisma.QuestionGetPayload<{
-    select: {
-        id: true;
-        createdAt: true;
-        updatedAt: true;
-        data: true;
-        answered: true;
-        userId: true;
-    }
-}>
+export type Question = {
+    id: string;
+    createdAt: number;
+    updatedAt: number;
+    data: string;
+    answered: boolean;
+    userId: string;
+    createdBy?: string,
+}
 
-export type Reply = Prisma.ReplyGetPayload<{
-    select: {
-        createdAt: true,
-        data: true,
-        id: true,
-        qId: true,
-        updatedAt: true,
-        question: {
-            select: {
-                user: {
-                    select: {
-                        username: true,
-                    }
-                }
-            }
-        }
-    },
-}>
+export type Reply = {
+    createdAt: number,
+    data: string,
+    id: string,
+    qId: string,
+    updatedAt: number,
+    username: string,
+}
 
 export const createSuccessResponse = (message: string, data?: object) => {
     return {
@@ -47,4 +34,10 @@ export const createSuccessResponse = (message: string, data?: object) => {
         message,
         data,
     }
+}
+
+export type CreateQuestionDto = {
+    data: string, 
+    username: string, 
+    createdBy?: string
 }
