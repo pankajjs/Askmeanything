@@ -83,7 +83,7 @@ export const Replies = ()=> {
       <CardFooter className="px-4 py-2">
         <div className="w-full flex justify-between items-center">
         <div className="text-xs text-muted-foreground">
-            from <Link href={`/${reply.question.user.username}`}>{`@${reply.question.user.username}`}</Link>
+            from <Link href={`/${reply.createdBy}`}>{`@${reply.createdBy}`}</Link>
           </div>
           <div className="flex gap-1">
             <Clock className="w-4 h-4 text-muted-foreground" />
