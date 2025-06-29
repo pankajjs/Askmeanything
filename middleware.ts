@@ -13,7 +13,7 @@ export default async function middleware(req: NextRequest) {
     
     if(!ip){
         return NextResponse.json({
-            msg: "IP not found"
+            message: "IP not found"
         }, {status: 400});
     }
 
@@ -23,7 +23,8 @@ export default async function middleware(req: NextRequest) {
     }catch(error){
         console.error("Too many request", error)
         return NextResponse.json({
-            msg: "Too many request, Go touch some grass",
+            success: false,
+            message: "Too many request, Go touch some grass",
         }, {status: 429, headers: {
             "X-RateLimit-Reset" : "5",
             "X-RateLimit-Limit": "6"

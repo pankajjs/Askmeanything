@@ -1,39 +1,28 @@
 import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
 import { createSuccessResponse, User } from "@/lib/types";
-import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { findQuestionsByUserId } from "@/lib/dao/questions";
 
 async function getQuestionsByUser(req: NextRequest, userData: User) {
     try{
         const userId = req.nextUrl.pathname.split("/")[3];
 
         if(!userId){
-            return handleError(new BadRequestError("User Id is required"))
+            throw new BadRequestError("User Id is required");
         }
 
         if(userId !== userData.id){
-            return handleError(new ForbiddenError());
+            throw new ForbiddenError();
         }
 
         const answered = req.nextUrl.searchParams.get("answered") == "true";
-        const date = Date.now()
+        const createdAt = Number(req.nextUrl.searchParams.get("createdAt")) ?? Date.now();
 
-        const questions = await prisma.question.findMany({
-            where: {
-                userId: userId,
-                createdAt: {
-                    gte: new Date(date).setHours(0, 0, 0, 0),
-                    lte: new Date(date).setHours(23, 59, 59, 999),
-                },
-                answered: answered,
-            },
-            orderBy: {
-                createdAt: "desc"
-            },
-            omit: {
-                createdBy: true,
-            }
+        const questions = await findQuestionsByUserId({
+            id: userId,
+            createdAt,
+            answered,
         })
 
         return NextResponse.json(createSuccessResponse(
@@ -42,7 +31,7 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         ), {status: 200})
     }catch(error){
         console.error("Error while fetching questions by user", error)
-        return handleError();
+        return handleError(error as unknown as Error);
     }
 }
 
