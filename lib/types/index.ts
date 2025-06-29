@@ -36,7 +36,7 @@ export const createSuccessResponse = (message: string, data?: object) => {
     }
 }
 
-export type CreateQuestionDto = {
+export type CreateQuestionRequestDto = {
     data: string, 
     username: string, 
     createdBy?: string
