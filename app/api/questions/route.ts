@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
-import { CreateQuestionDto, createSuccessResponse } from "@/lib/types";
+import { CreateQuestionRequestDto, createSuccessResponse } from "@/lib/types";
 import { findUserByUserName } from "@/lib/dao/users";
-import { createQuestion } from "@/lib/api/questions";
+import { createQuestion } from "@/lib/dao/questions";
 
 export async function POST(req: NextRequest) {
     try{
-        const data = await req.json() as CreateQuestionDto;
+        const data = await req.json() as CreateQuestionRequestDto;
         const user = await findUserByUserName(data.username);
         
         if(!user){
@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
 
         const question = await createQuestion({
             data: data.data,
-            username: data.username,
-            createdBy: data.createdBy,
+            userId: user.id,
+            createdBy: data.createdBy ?? "anon-user",
         })
 
         return NextResponse.json(createSuccessResponse(
