@@ -19,7 +19,6 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         const answered = req.nextUrl.searchParams.get("answered") == "true";
         const createdAt = req.nextUrl.searchParams.get("createdAt") ?? Date.now();
         
-        console.log(answered, createdAt, userId);
         const questions = await findQuestionsByUserId({
             id: userId,
             createdAt: Number(createdAt),
