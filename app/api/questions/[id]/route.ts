@@ -1,9 +1,9 @@
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
-import { prisma } from "@/lib/config/prisma";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { createSuccessResponse } from "@/lib/types";
 import { deleteQuestionById, findQuestionById } from "@/lib/dao/questions";
+import { deleteReplyByQuestionId } from "@/lib/dao/replies";
 
 async function deleteQuestion(req: NextRequest) {
     try{
@@ -19,15 +19,9 @@ async function deleteQuestion(req: NextRequest) {
             throw new NotFoundError("Question not found");
         }
 
-        // Todo: Replace with firestore query
-        await prisma.reply.delete({
-            where: {
-                qId: question.id,
-            }
-        }).catch((reason)=>{
-            console.error(`Reply does not exist ${reason}`);
-        })
-
+        await deleteReplyByQuestionId(question.id).catch(e=>{
+            console.error(e);
+        });
 
         await deleteQuestionById(id);
 

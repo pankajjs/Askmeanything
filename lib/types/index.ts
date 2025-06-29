@@ -17,15 +17,16 @@ export type Question = {
     answered: boolean;
     userId: string;
     createdBy?: string,
+    username: string,
 }
 
 export type Reply = {
-    createdAt: number,
-    data: string,
     id: string,
-    qId: string,
+    questionId: string,
+    data: string,
+    createdAt: number,
     updatedAt: number,
-    username: string,
+    createdBy: string,
 }
 
 export const createSuccessResponse = (message: string, data?: object) => {
