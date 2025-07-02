@@ -28,8 +28,8 @@ export const createUser = async(email: string): Promise<User> => {
                 "admin": false,
                 "user": true
             },
-            createAt: Date.now(),
-            updatetAt: Date.now(),
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
             active: true,
             status: "Ask some interesting question huh:)"
         })
