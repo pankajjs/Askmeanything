@@ -13,7 +13,7 @@ import { User } from "@/lib/types"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 export const UpdateDetails = ({user}:{user: User}) => {
-    const {user: authUser, setUser} = useContext(AuthContext);
+    const {user: authUser} = useContext(AuthContext);
     
     const [userDetails, setUserDetails] = useState({
         username: user?.username ?? "",
@@ -29,13 +29,6 @@ export const UpdateDetails = ({user}:{user: User}) => {
         }),
         onSuccess(data){
             if(data){
-                setUser({
-                    ...authUser!,
-                    username: data.username,
-                    active: data.active,
-                    updatedAt: data.updatedAt,
-                    status: data.status,
-                })
                 window.location.href = `${process.env.NEXT_PUBLIC_DOMAIN}/${data.username}`
                 toast.success("Update your details, Please refresh the page.");
             }
