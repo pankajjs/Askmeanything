@@ -39,8 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-/lib/generated/prisma
-
-# config
-/lib/config/prod.firestore.json
