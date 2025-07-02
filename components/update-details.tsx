@@ -8,15 +8,12 @@ import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { updateUser } from "@/lib/api/users"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { User } from "@/lib/types"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
-
 export const UpdateDetails = ({user}:{user: User}) => {
     const {user: authUser, setUser} = useContext(AuthContext);
-    const router = useRouter();
     
     const [userDetails, setUserDetails] = useState({
         username: user?.username ?? "",
