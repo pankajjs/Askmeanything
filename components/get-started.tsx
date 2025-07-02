@@ -1,9 +1,9 @@
 "use client"
 
 import { AuthContext } from "@/lib/context"
-import { Link } from "lucide-react"
 import { useContext } from "react"
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export const GetStarted = () => {
     const {user} = useContext(AuthContext);
