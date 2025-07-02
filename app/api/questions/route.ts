@@ -32,7 +32,13 @@ export async function POST(req: NextRequest) {
             username: user.username,
         })
 
-        return NextResponse.json(question, {status: 201})
+        return NextResponse.json({
+            id: question.id,
+            data: question.data,
+            createdAt: question.createdAt,
+            updatedAt: question.updatedAt,
+            answered: question.answered,
+        }, {status: 201})
     }catch(error){
         console.error(`(POST): `, error);
         return handleError(error as Error);
