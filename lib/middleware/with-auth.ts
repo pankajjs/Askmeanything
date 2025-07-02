@@ -50,12 +50,14 @@ export function withAuthentication(handler: Handler) {
                 const user = await findUserById(id);
                 
                 if(!user){
-                    return new UnauthorizedError();
+                    throw new UnauthorizedError();
                 }
     
                 return handler(req, user);
             }
+            return handleError(new UnauthorizedError());
         }catch(error){
+            console.error("(withAuthentication): Error while checking for token expiration", error)
             return handleError(new UnauthorizedError());
         }
     }
