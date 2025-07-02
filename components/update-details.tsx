@@ -39,8 +39,8 @@ export const UpdateDetails = ({user}:{user: User}) => {
                     updatedAt: data.updatedAt,
                     status: data.status,
                 })
-                toast.success("Update your details");
-                router.push(`/${data.username}`)
+                window.location.href = `${process.env.NEXT_PUBLIC_DOMAIN}/${data.username}`
+                toast.success("Update your details, Please refresh the page.");
             }
         },
         onError(){
