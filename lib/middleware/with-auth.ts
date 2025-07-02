@@ -28,32 +28,34 @@ export function withAuthentication(handler: Handler) {
 
         return handler(req, user);
     }catch(error){
-        console.error("Error while checking authentication", error)
-        if (error instanceof TokenExpiredError){
-            let token = req.cookies.get(config.userToken.cookieName)?.value as string;
-            const {id, iat} = decodeToken(token) as {id: string, iat: number};
-
-            if(Math.floor(Date.now() / 1000) - iat > config.userToken.refreshTtl){
-                return handleError(new UnauthorizedError())
+        console.error("(withAuthentication): Error while checking authentication", error)
+        try{
+            if (error instanceof TokenExpiredError){
+                let token = req.cookies.get(config.userToken.cookieName)?.value as string;
+                const {id, iat} = decodeToken(token) as {id: string, iat: number};
+    
+                if(Math.floor(Date.now() / 1000) - iat > config.userToken.refreshTtl){
+                    throw new UnauthorizedError();
+                }
+    
+                token = generateToken({id});
+                const cookieStore = await cookies()
+                
+                cookieStore.set(config.userToken.cookieName, token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    maxAge: config.userToken.ttl
+                })
+                
+                const user = await findUserById(id);
+                
+                if(!user){
+                    return new UnauthorizedError();
+                }
+    
+                return handler(req, user);
             }
-
-            token = generateToken({id});
-            const cookieStore = await cookies()
-            
-            cookieStore.set(config.userToken.cookieName, token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                maxAge: config.userToken.ttl
-            })
-            
-            const user = await findUserById(id);
-            
-            if(!user){
-                return handleError(new UnauthorizedError());
-            }
-
-            return handler(req, user);
-        }else{
+        }catch(error){
             return handleError(new UnauthorizedError());
         }
     }

@@ -29,14 +29,6 @@ export type Reply = {
     createdBy: string,
 }
 
-export const createSuccessResponse = (message: string, data?: object) => {
-    return {
-        success: true,
-        message,
-        data,
-    }
-}
-
 export type CreateQuestionRequestDto = {
     data: string, 
     username: string, 
