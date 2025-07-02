@@ -29,7 +29,7 @@ export const UpdateDetails = ({user}:{user: User}) => {
         }),
         onSuccess(data){
             if(data){
-                window.location.href = `${process.env.NEXT_PUBLIC_DOMAIN}/${data.username}`
+                window.location.replace(`${process.env.NEXT_PUBLIC_DOMAIN}/${data.username}`)
                 toast.success("Update your details, Please refresh the page.");
             }
         },
