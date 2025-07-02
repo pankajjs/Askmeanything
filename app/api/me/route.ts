@@ -1,5 +1,5 @@
 import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
-import { createSuccessResponse, User } from "@/lib/types";
+import { User } from "@/lib/types";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { findUserById, findUserByUserName, updateUserById } from "@/lib/dao/users";
@@ -12,13 +12,10 @@ async function getUser(_req: NextRequest, userData: User){
             throw new NotFoundError("User not found");
         }
 
-        return NextResponse.json(createSuccessResponse(
-            "User fetched successfully",
-            user
-        ), {status: 200})
+        return NextResponse.json(user, {status: 200})
     }catch(error){
-        console.error(error)
-        return handleError(error as unknown as Error);
+        console.error(`(getUser): `, error)
+        return handleError(error as Error);
     }
 }
 
@@ -42,13 +39,10 @@ async function updateUser(req: NextRequest, userData: User){
             username: userDto.username ?? userData.username,
         })
 
-        return NextResponse.json(createSuccessResponse(
-            "Successfully updated user details",
-            data
-        ), {status: 200})
+        return NextResponse.json(data, {status: 200})
     }catch(error){
-        console.error(error)
-        return handleError(error as unknown as Error);
+        console.error(`(updateUser): `, error)
+        return handleError(error as Error);
     }
 }
 

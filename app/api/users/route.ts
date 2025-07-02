@@ -1,6 +1,5 @@
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 import { NextRequest, NextResponse } from "next/server";
-import { createSuccessResponse } from "@/lib/types";
 import { findUserByUserName } from "@/lib/dao/users";
 
 export async function POST(req: NextRequest) {
@@ -17,14 +16,14 @@ export async function POST(req: NextRequest) {
             throw new NotFoundError("User not found");
         }
 
-        return NextResponse.json(createSuccessResponse("Successfully fetched user", {
+        return NextResponse.json({
             username: user.username,
             roles: user.roles,
             status: user.status,
             active: user.active,
-        }), {status: 200})
+        }, {status: 200})
     }catch(error){
-        console.error(error);
-        return handleError(error as unknown as Error);
+        console.error(`(POST): `, error);
+        return handleError(error as Error);
     }
 }

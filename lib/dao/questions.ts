@@ -21,7 +21,7 @@ export const updateQuestionById = async (id: string, questionDto: Partial<Questi
             ...questionDto,
         }
     }catch(error){
-        console.error(`Error while updating question by id:${id}`, error);
+        console.error(`(updateQuestionById): Error while updating question by id:${id}`, error);
         throw error;
     }
 }
@@ -38,7 +38,7 @@ export const createQuestion = async ({data, userId, createdBy, username}: Create
             username,
         });
         
-        const question = (await questionDoc.get()).data() as unknown as Question;
+        const question = (await questionDoc.get()).data() as Question;
 
         return {
             id: questionDoc.id,
@@ -50,7 +50,7 @@ export const createQuestion = async ({data, userId, createdBy, username}: Create
             username: question.username
         }
     }catch(error){
-        console.error("Error while creating question", error);
+        console.error("(createQuestion): Error while creating question", error);
         throw error;
     }
 }
@@ -66,9 +66,9 @@ export const findQuestionById = async (id: string): Promise<Question | null> => 
         return {
             id: question.id,
             ...question.data(),
-        } as unknown as Question;
+        } as Question;
     }catch(error){
-        console.error(`Error while fetching question by id:${id}`, error);
+        console.error(`(findQuestionById): Error while fetching question by id:${id}`, error);
         throw error;
     }
 }
@@ -77,7 +77,7 @@ export const deleteQuestionById = async (id: string) => {
     try{
         await db.collection("questions").doc(id).delete();
     }catch(error){
-        console.error(`Error while deleting question by id:${id}`, error);
+        console.error(`(deleteQuestionById): Error while deleting question by id:${id}`, error);
         throw error;
     }
 }
@@ -117,7 +117,7 @@ export const findQuestionsByUserId = async ({id, createdAt, answered}: Prop) => 
 
         return questions;
     }catch(error){
-        console.error(`Error while fetching questions by userId:${id}`, error);
+        console.error(`(findQuestionsByUserId): Error while fetching questions by userId:${id}`, error);
         throw error;
     }
 }

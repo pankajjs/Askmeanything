@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 
 export class APIError extends Error{
-    success: boolean
     message: string
     error: string
     status: number
@@ -9,7 +8,6 @@ export class APIError extends Error{
     constructor(message: string, error: string, status: number){
         super(message)
         this.message = message
-        this.success = false
         this.error = error
         this.status = status
     }
@@ -54,13 +52,11 @@ export class ConflictError extends APIError {
 export const handleError = (err?: Error) => {
     if(err instanceof APIError){
         return NextResponse.json({
-            success: err.success,
             message: err.message,
             error: err.error,
         }, {status: err.status})
     }
     return NextResponse.json({
-        success: false,
         message: "Something went wrong",
         error: "Internal Server Error"
     }, {

@@ -1,7 +1,6 @@
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { createSuccessResponse } from "@/lib/types";
 import { deleteQuestionById, findQuestionById } from "@/lib/dao/questions";
 import { deleteReplyByQuestionId } from "@/lib/dao/replies";
 
@@ -25,12 +24,10 @@ async function deleteQuestion(req: NextRequest) {
 
         await deleteQuestionById(id);
 
-        return NextResponse.json(createSuccessResponse(
-            "Successfully deleted a question")
-        ,{status: 200});
+        return NextResponse.json(null, {status: 204});
     }catch(error){
-        console.error("Error while deleting question", error)
-        return handleError(error as unknown as Error);
+        console.error("(deleteQuestion): Error while deleting question", error)
+        return handleError(error as Error);
     }
 }
 

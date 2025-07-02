@@ -14,7 +14,7 @@ export type CreateReplyDto ={
     createdBy: string,
 }
 
-export const createReply = async ({data, questionId, createdBy}: CreateReplyDto) => {
+export const createReply = async ({data, questionId, createdBy}: CreateReplyDto): Promise<Reply> => {
     try{
         const replyDoc = await db.collection("replies").add({
             data,
@@ -27,10 +27,9 @@ export const createReply = async ({data, questionId, createdBy}: CreateReplyDto)
         return {
             id: replyDoc.id,
             ...(await replyDoc.get()).data(),
-        } as unknown as Reply;
-
+        } as Reply;
     }catch(error){
-        console.error(`Error while creating reply`, error);
+        console.error(`(createReply): Error while creating reply`, error);
         throw error;
     }
 }
@@ -46,7 +45,7 @@ export const deleteReplyByQuestionId = async (qId: string) => {
         repliesDoc.forEach(doc=>doc.ref.delete())
         return qId;
     }catch(error){
-        console.error(`Error while deleting reply by questionId:${qId}`, error);
+        console.error(`(deleteReplyByQuestionId): Error while deleting reply by questionId:${qId}`, error);
         throw error;
     }
 }
@@ -75,7 +74,7 @@ export const findRepliesByUserId = async ({userId, createdAt}: Prop) => {
         })
         return replies;
     }catch(error){
-        console.error(`Error while fetching replies by userId:${userId}`, error);
+        console.error(`(findRepliesByUserId): Error while fetching replies by userId:${userId}`, error);
         throw error;
     }
 }

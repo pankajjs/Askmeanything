@@ -12,9 +12,9 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
         return {
             id: users.docs[0].id,
             ...users.docs[0].data()
-        } as unknown as User;
+        } as User;
     }catch(error){
-        console.error("Error while fetching user by email", error)
+        console.error("(findUserByEmail): Error while fetching user by email", error)
         throw error;
     }
 }
@@ -34,13 +34,12 @@ export const createUser = async(email: string): Promise<User> => {
             status: "Ask some interesting question huh:)"
         })
 
-
         return {
             id: user.id,
             ...(await user.get()).data(),
-        } as unknown as  User;
+        } as User;
     }catch(error){
-        console.error("Error while creating user", error);
+        console.error("(createUser): Error while creating user", error);
         throw error;
     }
 }
@@ -56,9 +55,9 @@ export const findUserById = async (id: string): Promise<User | null> => {
         return {
             id: user.id,
             ...user.data()
-        } as unknown as User;
+        } as User;
     }catch(error){
-        console.error(`Error while fetching user by id: ${id}`, error);
+        console.error(`(findUserById): Error while fetching user by id: ${id}`, error);
         throw error;
     }
 }
@@ -74,9 +73,9 @@ export const findUserByUserName = async(username: string): Promise<User | null> 
         return {
             id: users.docs[0].id,
             ...users.docs[0].data()
-        } as unknown as User;
+        } as User;
     }catch(error){
-        console.error(`Error while fetching user by username:${username}`, error);
+        console.error(`(findUserByUserName): Error while fetching user by username:${username}`, error);
         throw error;
     }
 }
@@ -93,7 +92,7 @@ export const updateUserById = async (id: string, userDto: Partial<User>) => {
             ...userDto,
         }
     }catch(error){
-        console.error("Error while updating user", error);
+        console.error("(updateUserById): Error while updating user", error);
         throw error;
     }
 }

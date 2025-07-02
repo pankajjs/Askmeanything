@@ -1,5 +1,5 @@
 import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
-import { createSuccessResponse, User } from "@/lib/types";
+import { User } from "@/lib/types";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { findQuestionsByUserId } from "@/lib/dao/questions";
@@ -25,13 +25,10 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
             answered,
         })
 
-        return NextResponse.json(createSuccessResponse(
-            "Questions fetched successfully",
-            questions
-        ), {status: 200})
+        return NextResponse.json(questions, {status: 200})
     }catch(error){
-        console.error("Error while fetching questions by user", error)
-        return handleError(error as unknown as Error);
+        console.error("(getQuestionsByUser): Error while fetching questions by user", error)
+        return handleError(error as Error);
     }
 }
 

@@ -9,11 +9,11 @@ export const createQuestion = async ({data, username, createdBy}: {data: string,
     
     const jsonRes = await res.json();
 
-    if(!jsonRes.success){
+    if(!jsonRes.error){
       throw new Error(jsonRes.message)
     }
   
-    return jsonRes.data;
+    return jsonRes;
 }
 
 export const deleteQuestion = async(id: string) => {
@@ -24,9 +24,9 @@ export const deleteQuestion = async(id: string) => {
     
     const jsonRes = await res.json();
 
-    if(!jsonRes.success){
+    if(!jsonRes.error){
       throw new Error(jsonRes.message)
     }
   
-    return jsonRes.data;
+    return jsonRes;
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BadRequestError, handleError, NotFoundError } from "@/lib/errors";
-import { CreateQuestionRequestDto, createSuccessResponse } from "@/lib/types";
+import { CreateQuestionRequestDto } from "@/lib/types";
 import { findUserByUserName } from "@/lib/dao/users";
 import { createQuestion } from "@/lib/dao/questions";
 
@@ -32,12 +32,9 @@ export async function POST(req: NextRequest) {
             username: user.username,
         })
 
-        return NextResponse.json(createSuccessResponse(
-            "Question sent successfully",
-            question
-        ), {status: 201})
+        return NextResponse.json(question, {status: 201})
     }catch(error){
-        console.error(error);
-        return handleError(error as unknown as Error);
+        console.error(`(POST): `, error);
+        return handleError(error as Error);
     }
 }

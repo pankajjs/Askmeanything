@@ -1,11 +1,11 @@
 import { BadRequestError, ConflictError, handleError, NotFoundError } from "@/lib/errors";
-import { createSuccessResponse, User } from "@/lib/types";
+import { User } from "@/lib/types";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { findQuestionById, updateQuestionById } from "@/lib/dao/questions";
 import { createReply } from "@/lib/dao/replies";
 
-async function CreateReplies(req: NextRequest, _userData: User) {
+async function createReplies(req: NextRequest, _userData: User) {
     try{
         const questionId = req.nextUrl.pathname.split("/")[3];
         
@@ -43,11 +43,11 @@ async function CreateReplies(req: NextRequest, _userData: User) {
                 questionId: question.id,
             })
 
-        return NextResponse.json(createSuccessResponse("Reply created successfully", reply), {status: 201});
+        return NextResponse.json(reply, {status: 201});
     }catch(error){
-        console.error("Error while creating reply", error)
-        return handleError(error as unknown as Error);
+        console.error("(createReplies): Error while creating reply", error)
+        return handleError(error as Error);
     }
 }
 
-export const POST = withAuthentication(CreateReplies)
+export const POST = withAuthentication(createReplies)
