@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "./ui/button"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useContext } from "react"
 import { AuthContext } from "@/lib/context"
 import { toast } from "sonner"
@@ -22,6 +22,7 @@ const dynaPuff = DynaPuff({
 
 export default function Navbar() {
     const router = useRouter()
+    const {dev} = useParams();
     const {user, setUser, loading} = useContext(AuthContext)
 
     const loginMutation = useMutation({
@@ -47,7 +48,7 @@ export default function Navbar() {
         }
     })
 
-    if(loading){
+    if(loading && !dev){
         return <NavbarShimmer/>
     }
 
