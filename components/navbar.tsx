@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "./ui/button"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useContext } from "react"
 import { AuthContext } from "@/lib/context"
 import { toast } from "sonner"
@@ -13,7 +13,6 @@ import { DynaPuff } from "next/font/google";
 import { ToolTipWrapper } from "./tooltip-wrapper"
 import { useMutation } from "@tanstack/react-query"
 import { API_URL } from "@/lib/api/constant"
-import { NavbarShimmer } from "./shimmer/navbar"
 
 const dynaPuff = DynaPuff({
     subsets: ["latin"],
@@ -22,8 +21,7 @@ const dynaPuff = DynaPuff({
 
 export default function Navbar() {
     const router = useRouter()
-    const {dev} = useParams();
-    const {user, setUser, loading} = useContext(AuthContext)
+    const {user, setUser} = useContext(AuthContext)
 
     const loginMutation = useMutation({
         mutationFn: async () => {
@@ -47,10 +45,6 @@ export default function Navbar() {
             toast.error("Failed to logout")
         }
     })
-
-    if(loading && !dev){
-        return <NavbarShimmer/>
-    }
 
     return (
         <div className="px-6 py-4 flex justify-center items-center">
