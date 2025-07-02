@@ -10,7 +10,7 @@ export const createReply = async ({data, qId}: {data: string, qId: string}): Pro
     
     const jsonRes = await res.json();
 
-    if(!jsonRes.error){
+    if(jsonRes.error){
       throw new Error(jsonRes.message)
     }
   
@@ -25,7 +25,7 @@ export const getRepliesByUser = async ({userId}: {userId: string}): Promise<Repl
 
     const jsonRes = await res.json();
 
-    if(!jsonRes.error){
+    if(jsonRes.error){
       throw new Error(jsonRes.message)
     }
   

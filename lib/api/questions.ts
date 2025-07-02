@@ -9,7 +9,7 @@ export const createQuestion = async ({data, username, createdBy}: {data: string,
     
     const jsonRes = await res.json();
 
-    if(!jsonRes.error){
+    if(jsonRes.error){
       throw new Error(jsonRes.message)
     }
   
@@ -24,7 +24,7 @@ export const deleteQuestion = async(id: string) => {
     
     const jsonRes = await res.json();
 
-    if(!jsonRes.error){
+    if(jsonRes.error){
       throw new Error(jsonRes.message)
     }
   
