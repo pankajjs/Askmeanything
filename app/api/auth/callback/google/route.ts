@@ -53,6 +53,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.redirect(state)
     }catch(error){
         console.error("Error while logging in", error)
-        return NextResponse.redirect(new URL(`/?error=unauthorized`, req.url))
+        return NextResponse.redirect(new URL(`/?callback_error=${(error as Error).message}`, req.url))
     }
 }
