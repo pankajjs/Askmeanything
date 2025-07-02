@@ -1,12 +1,6 @@
-"use client"
-
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { useContext } from "react";
-import { AuthContext } from "@/lib/context";
+import { GetStarted } from "@/components/get-started";
 
 export default function Home() {
-  const { user } = useContext(AuthContext);
   return (
     <div className="flex items-center justify-center min-h-[60vh] py-24">
       <div className="flex flex-col items-center w-full max-w-2xl px-4">
@@ -19,9 +13,7 @@ export default function Home() {
         <p className="text-md text-muted-foreground mb-8 text-center max-w-xl">
           Ask questions anonymously and get honest answers. Join the conversation, connect, and discover new perspectives.
         </p>
-        <Link href={user ? `/${user.username}` : `/api/auth/login`}>
-          <Button className="rounded-full p-5 text-md">Get Started</Button>
-        </Link>
+        <GetStarted/>
       </div>
     </div>
   );

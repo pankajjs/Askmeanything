@@ -12,7 +12,7 @@ export default async function Page({params}: {params: Promise<{username: string}
         notFound()
     }
 
-    const user: User = (await res.json()).data;
+    const user: User = await res.json();
 
     return <div className="flex flex-col items-center">
         <div className="max-w-2xl w-full py-6 px-6">
