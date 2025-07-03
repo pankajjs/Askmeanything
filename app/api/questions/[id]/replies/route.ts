@@ -44,7 +44,13 @@ async function createReplies(req: NextRequest, userData: User) {
                 questionId: question.id,
             })
 
-        return NextResponse.json(reply, {status: 201});
+        return NextResponse.json({
+            id: reply.id,
+            data: reply.data,
+            createdAt: reply.createdAt,
+            updatedAt: reply.updatedAt,
+            createdBy: reply.createdBy
+        }, {status: 201});
     }catch(error){
         console.error("(createReplies): Error while creating reply", error)
         return handleError(error as Error);
