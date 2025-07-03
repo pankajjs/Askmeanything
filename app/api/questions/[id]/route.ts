@@ -24,7 +24,9 @@ async function deleteQuestion(req: NextRequest) {
 
         await deleteQuestionById(id);
 
-        return NextResponse.json(null, {status: 204});
+        return NextResponse.json({
+            message: "Question deleted successfully"
+        }, {status: 200});
     }catch(error){
         console.error("(deleteQuestion): Error while deleting question", error)
         return handleError(error as Error);
