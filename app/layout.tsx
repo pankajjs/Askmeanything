@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/navbar";
 import { Providers } from "@/components/providers/providers";
+import {Analytics} from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Providers>
           <Navbar/>
           {children}
+          <Analytics/>
           <Toaster position="top-center" richColors offset={80} mobileOffset={80}/>
       </Providers>
       </body>
