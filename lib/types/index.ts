@@ -15,9 +15,8 @@ export type Question = {
     updatedAt: number;
     data: string;
     answered: boolean;
-    userId: string;
-    createdBy?: string,
-    username: string,
+    createdFor: string, // username of host
+    createdBy?: string, // username of guest/anon
 }
 
 export type Reply = {
@@ -26,11 +25,12 @@ export type Reply = {
     data: string,
     createdAt: number,
     updatedAt: number,
-    createdBy: string,
+    createdFor?: string, // username of guest/anon
+    createdBy: string // username of host
 }
 
 export type CreateQuestionRequestDto = {
     data: string, 
-    username: string, 
-    createdBy?: string
+    createdFor: string, // username of host
+    createdBy?: string // username of guest/anon
 }

@@ -4,23 +4,25 @@ import { Reply } from "../types";
 import { NotFoundError } from "../errors";
 
 export type Prop = {
-    userId: string,
+    createdFor: string,
     createdAt: number,
 }
 
 export type CreateReplyDto ={
     data: string,    
     questionId: string,
-    createdBy: string,
+    createdFor: string,
+    createdBy: string
 }
 
-export const createReply = async ({data, questionId, createdBy}: CreateReplyDto): Promise<Reply> => {
+export const createReply = async ({data, questionId, createdFor, createdBy}: CreateReplyDto): Promise<Reply> => {
     try{
         const replyDoc = await db.collection("replies").add({
             data,
             questionId,
             createdAt: Date.now(),
             updatedAt: Date.now(),
+            createdFor,
             createdBy,
         })
 
@@ -50,11 +52,11 @@ export const deleteReplyByQuestionId = async (qId: string) => {
     }
 }
 
-export const findRepliesByUserId = async ({userId, createdAt}: Prop) => {
+export const findRepliesByUserName = async ({createdFor, createdAt}: Prop) => {
     try{
         const repliesDoc = await db.collection("replies").where(
             Filter.and(
-                Filter.where("createdBy", "==", userId),
+                Filter.where("createdFor", "==", createdFor),
                 Filter.where("createdAt", ">=", new Date(createdAt).setHours(0, 0, 0, 0)),
                 Filter.where("createdAt", "<=", new Date(createdAt).setHours(23, 59, 59, 999))
             )
@@ -66,15 +68,16 @@ export const findRepliesByUserId = async ({userId, createdAt}: Prop) => {
             replies.push({
                 id: r.id,
                 createdAt: r.data().createdAt,
-                createdBy: r.data().createdBy,
+                createdFor: r.data().createdFor,
                 data: r.data().data,
                 questionId: r.data().questionId,
                 updatedAt: r.data().updatedAt,
+                createdBy: r.data().createdBy,
             })
         })
         return replies;
     }catch(error){
-        console.error(`(findRepliesByUserId): Error while fetching replies by userId:${userId}`, error);
+        console.error(`(findRepliesByUserId): Error while fetching replies by createdFor:${createdFor}`, error);
         throw error;
     }
 }

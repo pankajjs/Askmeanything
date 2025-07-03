@@ -4,9 +4,8 @@ import { Question } from "../types";
 
 export type CreateQuestionDto = {
     data: string,
-    userId: string,
+    createdFor: string,
     createdBy: string,
-    username: string,
 }
 
 export const updateQuestionById = async (id: string, questionDto: Partial<Question>) => {
@@ -26,16 +25,15 @@ export const updateQuestionById = async (id: string, questionDto: Partial<Questi
     }
 }
 
-export const createQuestion = async ({data, userId, createdBy, username}: CreateQuestionDto): Promise<Question> => {
+export const createQuestion = async ({data, createdFor, createdBy}: CreateQuestionDto): Promise<Question> => {
     try{
         const questionDoc = await db.collection("questions").add({
             data,
-            userId,
             createdBy,
             createdAt: Date.now(),
             updatedAt: Date.now(),
             answered: false,
-            username,
+            createdFor,
         });
         
         const question = (await questionDoc.get()).data() as Question;
@@ -46,8 +44,7 @@ export const createQuestion = async ({data, userId, createdBy, username}: Create
             answered: question.answered,
             updatedAt: question.updatedAt,
             createdAt: question.createdAt,
-            userId: question.userId,
-            username: question.username
+            createdFor: question.createdFor,
         }
     }catch(error){
         console.error("(createQuestion): Error while creating question", error);
@@ -83,17 +80,17 @@ export const deleteQuestionById = async (id: string) => {
 }
 
 export type Prop = {
-    id: string,
     answered?: boolean
     createdAt: number
+    createdFor: string,
 }
 
-export const findQuestionsByUserId = async ({id, createdAt, answered}: Prop) => {
+export const findQuestionsByUserName = async ({createdFor, createdAt, answered}: Prop) => {
     try{
         const questionsDoc = await db.collection("questions")
                             .where(
                                 Filter.and(
-                                    Filter.where("userId", "==", id),
+                                    Filter.where("createdFor", "==", createdFor),
                                     Filter.where("createdAt", ">=", new Date(createdAt).setHours(0, 0, 0, 0)),
                                     Filter.where("createdAt", "<=", new Date(createdAt).setHours(23, 59, 59, 999)),
                                     Filter.where("answered", "==", answered)
@@ -110,14 +107,13 @@ export const findQuestionsByUserId = async ({id, createdAt, answered}: Prop) => 
                 createdAt: q.data().createdAt,
                 data: q.data().data,
                 updatedAt: q.data().updatedAt,
-                userId: q.data().userId,
-                username: q.data().username,
+                createdFor: q.data().createdFor,
             })
         })
 
         return questions;
     }catch(error){
-        console.error(`(findQuestionsByUserId): Error while fetching questions by userId:${id}`, error);
+        console.error(`(findQuestionsByUserId): Error while fetching questions by username:${createdFor}`, error);
         throw error;
     }
 }

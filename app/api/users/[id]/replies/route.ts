@@ -2,7 +2,7 @@ import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
 import { User } from "@/lib/types";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { findRepliesByUserId } from "@/lib/dao/replies";
+import { findRepliesByUserName } from "@/lib/dao/replies";
 
 async function getReplies(req: NextRequest, userData: User) {
     try{
@@ -18,8 +18,8 @@ async function getReplies(req: NextRequest, userData: User) {
 
         const createdAt = req.nextUrl.searchParams.get("createdBy") ?? Date.now();
 
-        const replies = await findRepliesByUserId({
-            userId,
+        const replies = await findRepliesByUserName({
+            createdFor: userData.username,
             createdAt: Number(createdAt),
         })
 

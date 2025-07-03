@@ -2,7 +2,7 @@ import { BadRequestError, ForbiddenError, handleError } from "@/lib/errors";
 import { User } from "@/lib/types";
 import { withAuthentication } from "@/lib/middleware/with-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { findQuestionsByUserId } from "@/lib/dao/questions";
+import { findQuestionsByUserName } from "@/lib/dao/questions";
 
 async function getQuestionsByUser(req: NextRequest, userData: User) {
     try{
@@ -19,8 +19,8 @@ async function getQuestionsByUser(req: NextRequest, userData: User) {
         const answered = req.nextUrl.searchParams.get("answered") == "true";
         const createdAt = req.nextUrl.searchParams.get("createdAt") ?? Date.now();
         
-        const questions = await findQuestionsByUserId({
-            id: userId,
+        const questions = await findQuestionsByUserName({
+            createdFor: userData.username,
             createdAt: Number(createdAt),
             answered,
         })

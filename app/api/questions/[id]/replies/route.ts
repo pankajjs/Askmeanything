@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { findQuestionById, updateQuestionById } from "@/lib/dao/questions";
 import { createReply } from "@/lib/dao/replies";
 
-async function createReplies(req: NextRequest, _userData: User) {
+async function createReplies(req: NextRequest, userData: User) {
     try{
         const questionId = req.nextUrl.pathname.split("/")[3];
         
@@ -39,7 +39,8 @@ async function createReplies(req: NextRequest, _userData: User) {
         
         const reply = await createReply({
                 data: createRepliesDto.data,
-                createdBy: question.username,
+                createdFor: question.createdBy!,
+                createdBy: userData.username,
                 questionId: question.id,
             })
 

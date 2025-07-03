@@ -6,18 +6,18 @@ import { createQuestion } from "@/lib/dao/questions";
 
 export async function POST(req: NextRequest) {
     try{
-        const data = await req.json() as CreateQuestionRequestDto;
-        const user = await findUserByUserName(data.username);
+        const {createdFor, data, createdBy} = await req.json() as CreateQuestionRequestDto;
+        const user = await findUserByUserName(createdFor);
         
         if(!user){
             throw new NotFoundError("User not found");
         }
 
-        if(user.id === data.createdBy){
+        if(user.username === createdBy){
             throw new BadRequestError("You need therapy");
         }
 
-        if(data.data.length > 200){
+        if(data.length > 200){
             throw new BadRequestError("Question is too long");
         }
 
@@ -26,10 +26,9 @@ export async function POST(req: NextRequest) {
         }
 
         const question = await createQuestion({
-            data: data.data,
-            userId: user.id,
-            createdBy: data.createdBy ?? "anon-user",
-            username: user.username,
+            data,
+            createdBy: createdBy ?? "anon-user",
+            createdFor: user.username
         })
 
         return NextResponse.json({
