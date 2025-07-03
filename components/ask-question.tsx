@@ -15,7 +15,7 @@ export default function AskQuestion({username}: {username: string}) {
     const { user } = useContext(AuthContext)
 
     const createQuestionMutation = useMutation({
-        mutationFn: () => createQuestion({data: message, username, createdBy: user?.id}),
+        mutationFn: () => createQuestion({data: message, createdFor: username, createdBy: user?.username}),
         onSuccess(data) {
             if(data){
                 setMessage("");

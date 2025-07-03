@@ -1,10 +1,10 @@
 import { Question } from "../types";
 import { API_URL } from "./constant";
 
-export const createQuestion = async ({data, username, createdBy}: {data: string, username: string, createdBy?: string}): Promise<Question> => {
+export const createQuestion = async ({data, createdFor, createdBy}: {data: string, createdFor: string, createdBy?: string}): Promise<Question> => {
     const res = await fetch(`${API_URL}/questions`, {
         method: "POST",
-        body: JSON.stringify({data, username, createdBy}),
+        body: JSON.stringify({data, createdFor, createdBy}),
     })
     
     const jsonRes = await res.json();
